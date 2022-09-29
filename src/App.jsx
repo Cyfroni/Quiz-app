@@ -50,10 +50,18 @@ function App() {
   };
 
   const next = () => {
-    console.log(question?.correct);
+    console.log(question?.answers);
     console.log(checkedAnswers);
+
+    // let correct = 0;
+    // let incorrect = 0;
+
+    // console.log(Object.entries(question?.answers).forEach([key, {correct}] => )
+
     setQuestionNumber((q) => q + 1);
   };
+
+  console.log(questions);
 
   return (
     <div className="App">
@@ -61,16 +69,16 @@ function App() {
       <article className="question">
         <h2 className="question__question">{question?.question}</h2>
         <ul className="question__answers">
-          {question?.answers?.map((a) => (
-            <li key={a}>
+          {Object.entries(question?.answers || {}).map(([key, value]) => (
+            <li key={key}>
               <input
                 type="checkbox"
-                id={a}
-                name={a}
-                value={checkedAnswers[a]}
+                id={key}
+                name={key}
+                value={checkedAnswers[key]}
                 onChange={handleChange}
               />
-              <label htmlFor={a}>{a}</label>
+              <label htmlFor={key}>{value.text}</label>
             </li>
           ))}
         </ul>

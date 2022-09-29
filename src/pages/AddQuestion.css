@@ -10,6 +10,17 @@
   font-size: 2rem;
 }
 
-.add-question input {
-  display: block;
+/* .add-question input {
+  display: inline-block;
+} */
+
+.input-container {
+  display: flex;
+}
+.input-container > textarea {
+  flex: 1;
+}
+
+.add-answer-btn {
+  margin-bottom: 5rem;
 }

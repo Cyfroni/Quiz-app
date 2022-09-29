@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -9,10 +10,8 @@ export default function Login() {
     const auth = getAuth();
     signInWithEmailAndPassword(auth, username, password)
       .then((userCredential) => {
-        // Signed in
         const user = userCredential.user;
         console.log(user);
-        // ...
       })
       .catch((error) => {
         const errorCode = error.code;

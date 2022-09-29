@@ -4,8 +4,13 @@ import "./AddQuestion.css";
 
 export default function AddQuestion() {
   const [question, setQuestion] = useState("");
-  const [answers, setAnswers] = useState([]);
-  const [correct, setCorrect] = useState([]);
+
+  const [answers, setAnswers] = useState({
+    "Answer 1": {
+      text: "",
+      correct: false,
+    },
+  });
 
   const save = () => {
     const db = getDatabase();
@@ -13,41 +18,74 @@ export default function AddQuestion() {
     const newPostRef = push(postListRef);
     set(newPostRef, {
       question,
-      answers: JSON.parse(answers),
-      correct: JSON.parse(correct),
+      answers,
     });
   };
 
+  const addAnswer = () => {
+    setAnswers((answers) => ({
+      ...answers,
+      [`Answer ${Object.keys(answers).length + 1}`]: {
+        text: "",
+        correct: false,
+      },
+    }));
+  };
+
   return (
-    <div class="add-question">
+    <div className="add-question">
       <div>
         <label htmlFor="question">Question</label>
-        <input
+        <textarea
+          name="question"
           id="question"
-          type="text"
+          cols="30"
+          rows="10"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-        />
+        ></textarea>
       </div>
-      <div>
-        <label htmlFor="answers">answers</label>
-        <input
-          id="answers"
-          type="text"
-          value={answers}
-          onChange={(e) => setAnswers(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="correct">correct</label>
-        <input
-          id="correct"
-          type="text"
-          value={correct}
-          onChange={(e) => setCorrect(e.target.value)}
-        />
-      </div>
-      <button onClick={save}>save</button>
+      {Object.entries(answers).map(([key, value]) => (
+        <div key={key}>
+          <label htmlFor={key}>{key}</label>
+          <div className="input-container">
+            <textarea
+              name={key}
+              id={key}
+              type="text"
+              value={value.text}
+              onChange={(e) =>
+                setAnswers((answers) => ({
+                  ...answers,
+                  [key]: {
+                    text: e.target.value,
+                    correct: value.correct,
+                  },
+                }))
+              }
+            />
+            <input
+              type="checkbox"
+              value={value.text}
+              onChange={(e) =>
+                setAnswers((answers) => ({
+                  ...answers,
+                  [key]: {
+                    text: value.text,
+                    correct: e.target.value,
+                  },
+                }))
+              }
+            />
+          </div>
+        </div>
+      ))}
+      <button className="add-answer-btn" onClick={addAnswer}>
+        Add new answer
+      </button>
+      <button className="save-btn" onClick={save}>
+        save
+      </button>
     </div>
   );
 }
