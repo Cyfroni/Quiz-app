@@ -1,6 +1,6 @@
 import { getAuth } from "firebase/auth";
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import { useAuthContext } from "./main";
 import { Link } from "react-router-dom";
 import "./Root.css";
@@ -10,25 +10,37 @@ export default function Root() {
   const auth = getAuth();
   return (
     <>
-      <div>{user?.email}</div>
       <nav className="main-nav">
-        <ul>
+        <div className="main-nav__username">{user?.email}</div>
+        <ul className="main-nav__navitems">
           <li>
-            <Link to="/">/</Link>
+            <NavLink to="/test">Test</NavLink>
           </li>
-          <li>
-            <Link to="/test">test</Link>
-          </li>
-          <li>
-            <Link to="/login">login</Link>
-          </li>
-          <li>
-            <Link to="/admin">admin</Link>
-          </li>
+          {user && (
+            <li>
+              <NavLink to="/admin/addQuestion">Add Question</NavLink>
+            </li>
+          )}
+          {!user && (
+            <li>
+              <NavLink to="/login">Login</NavLink>
+            </li>
+          )}
+          {user && (
+            <li>
+              <button
+                className="main-nav__logoutbtn"
+                onClick={() => auth.signOut()}
+              >
+                Logout
+              </button>
+            </li>
+          )}
         </ul>
       </nav>
-      <button onClick={() => auth.signOut()}>logout</button>
-      <Outlet />
+      <main>
+        <Outlet />
+      </main>
     </>
   );
 }

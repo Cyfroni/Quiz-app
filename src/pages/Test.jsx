@@ -8,7 +8,7 @@ import {
 } from "firebase/database";
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
-import "./App.css";
+import "./Test.css";
 
 // const QUESTIONS = [
 //   {
@@ -33,7 +33,7 @@ export async function loader() {
   // return data.
 }
 
-function App() {
+function Test() {
   const [questionNumber, setQuestionNumber] = useState(0);
   const [checkedAnswers, setCheckedAnswers] = useState({});
 
@@ -64,7 +64,7 @@ function App() {
   console.log(questions);
 
   return (
-    <div className="App">
+    <section id="test">
       <h1>Question: {questionNumber}</h1>
       <article className="question">
         <h2 className="question__question">{question?.question}</h2>
@@ -98,8 +98,8 @@ function App() {
         </button>
         {/* {questionNumber === questions.length && <button>finish</button>} */}
       </footer>
-    </div>
+    </section>
   );
 }
 
-export default App;
+export default Test;

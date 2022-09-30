@@ -1,5 +1,5 @@
-.add-question {
-  display: flex;
+#add-question {
+  /* display: flex;
   flex-direction: column;
   margin: 0 auto;
   gap: 1rem;
@@ -7,12 +7,27 @@
   width: 30vh;
   margin-top: 15rem;
 
+  font-size: 2rem; */
+
+  height: 100%;
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
+  flex-direction: column;
+
   font-size: 2rem;
+
+  width: 30%;
+  margin: 0 auto;
 }
 
-/* .add-question input {
-  display: inline-block;
+/* #add-question > div {
+  width: 100%;
 } */
+
+#add-question textarea {
+  display: block;
+}
 
 .input-container {
   display: flex;

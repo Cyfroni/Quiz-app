@@ -33,17 +33,17 @@ export default function AddQuestion() {
   };
 
   return (
-    <div className="add-question">
+    <section id="add-question">
       <div>
         <label htmlFor="question">Question</label>
-        <textarea
-          name="question"
-          id="question"
-          cols="30"
-          rows="10"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-        ></textarea>
+        <div className="input-container">
+          <textarea
+            name="question"
+            id="question"
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+          ></textarea>
+        </div>
       </div>
       {Object.entries(answers).map(([key, value]) => (
         <div key={key}>
@@ -86,6 +86,6 @@ export default function AddQuestion() {
       <button className="save-btn" onClick={save}>
         save
       </button>
-    </div>
+    </section>
   );
 }

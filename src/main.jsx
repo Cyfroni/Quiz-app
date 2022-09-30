@@ -2,8 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import App, { loader as appLoader } from "./App";
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  RouterProvider,
+} from "react-router-dom";
+import Test, { loader as testLoader } from "./pages/Test";
 import "./index.css";
 import AddQuestion from "./pages/AddQuestion";
 import Login from "./pages/Login";
@@ -18,15 +23,24 @@ const app = initializeApp(firebaseConfig);
 
 // export const auth = getAuth(app);
 
+function ProtectedRoute({ props }) {
+  const { user } = useAuthContext();
+
+  if (!user) return <Navigate to="/login" />;
+
+  return <Outlet />;
+}
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
+
     children: [
       {
         path: "/test",
-        element: <App />,
-        loader: appLoader,
+        element: <Test />,
+        loader: testLoader,
       },
       {
         path: "/login",
@@ -34,13 +48,13 @@ const router = createBrowserRouter([
       },
       {
         path: "/admin",
-        element: <AddQuestion />,
-        // children: [
-        //   {
-        //     path: "addQuestion",
-        //     element: <AddQuestion />,
-        //   },
-        // ],
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "addQuestion",
+            element: <AddQuestion />,
+          },
+        ],
       },
     ],
   },

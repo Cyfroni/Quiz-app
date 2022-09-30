@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { getAuth } from "firebase/auth";
+import "./login.css";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -20,7 +21,7 @@ export default function Login() {
   };
 
   return (
-    <div>
+    <section id="login">
       <input
         type="text"
         value={username}
@@ -32,6 +33,6 @@ export default function Login() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={login}>log in</button>
-    </div>
+    </section>
   );
 }

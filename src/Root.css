@@ -1,7 +1,64 @@
-.main-nav ul {
+#root {
+  height: 100vh;
   display: flex;
-  gap: 10rem;
-  list-style-type: none;
+  flex-direction: column;
+}
 
-  padding: 1rem;
+main {
+  flex: 1;
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background-color: orangered;
+  font-size: 2rem;
+}
+
+.main-nav__username {
+  margin-left: 5rem;
+  margin-right: auto;
+}
+
+.main-nav__navitems {
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+  list-style-type: none;
+}
+
+.main-nav__navitems li {
+  flex: 1;
+}
+
+.main-nav__navitems a,
+.main-nav__navitems button {
+  padding: 2rem 0;
+  display: block;
+  text-decoration: none;
+
+  text-align: center;
+  color: inherit;
+}
+
+.main-nav__logoutbtn {
+  font-size: inherit;
+  border: none;
+  background: none;
+  width: 100%;
+  height: 100%;
+}
+
+.main-nav__navitems {
+  color: white;
+}
+
+.main-nav__navitems li:hover {
+  background-color: yellowgreen;
+  color: black;
+}
+
+.main-nav__navitems a.active {
+  background-color: black;
 }
