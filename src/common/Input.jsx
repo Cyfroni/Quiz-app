@@ -10,5 +10,5 @@ const InputStyled = styled.input`
 `;
 
 export default function Input(props) {
-  return <InputStyled type={props.type || "text"} />;
+  return <InputStyled type={props.type || "text"} {...props} />;
 }

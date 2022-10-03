@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import React, { useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import {
   createBrowserRouter,
@@ -9,21 +8,14 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
+import { AuthContextProvider, useAuthContext } from "./Auth";
 import AddQuestion from "./pages/AddQuestion";
 import Login from "./pages/Login";
 import Test, { loader as testLoader } from "./pages/Test";
 import Root from "./Root";
+import ThemeProvider from "./Theme";
 
-const firebaseConfig = {
-  databaseURL: import.meta.env.VITE_DATABASE_URL,
-  apiKey: import.meta.env.VITE_API_KEY,
-};
-
-const app = initializeApp(firebaseConfig);
-
-// export const auth = getAuth(app);
-
-function ProtectedRoute({ props }) {
+function ProtectedRoute() {
   const { user } = useAuthContext();
 
   if (!user) return <Navigate to="/login" />;
@@ -34,7 +26,11 @@ function ProtectedRoute({ props }) {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    element: (
+      // <AuthContextProvider>
+      <Root />
+      // </AuthContextProvider>
+    ),
 
     children: [
       {
@@ -60,37 +56,6 @@ const router = createBrowserRouter([
   },
 ]);
 
-const AuthContext = React.createContext({ user: {} });
-
-function AuthContextProvider(props) {
-  const [user, setUser] = useState(null);
-
-  const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      setUser(user);
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/firebase.User
-      // const uid = user.uid;
-      // ...
-    } else {
-      setUser(null);
-      // User is signed out
-      // ...
-    }
-  });
-
-  return (
-    <AuthContext.Provider value={{ user }}>
-      {props.children}
-    </AuthContext.Provider>
-  );
-}
-
-export function useAuthContext() {
-  return React.useContext(AuthContext);
-}
-
 const GlobalStyle = createGlobalStyle`
 
   :root {
@@ -113,6 +78,11 @@ const GlobalStyle = createGlobalStyle`
     font-size: 62.5%;
   }
 
+  body {
+    min-height: 100vh;
+    background-color: ${({ theme }) => theme.colors.secondary}
+  }
+
   @media (prefers-color-scheme: light) {
     :root {
       color: #213547;
@@ -123,9 +93,11 @@ const GlobalStyle = createGlobalStyle`
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <AuthContextProvider>
-      <GlobalStyle />
-      <RouterProvider router={router} />
-    </AuthContextProvider>
+    <ThemeProvider>
+      <AuthContextProvider>
+        <GlobalStyle />
+        <RouterProvider router={router} />
+      </AuthContextProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );

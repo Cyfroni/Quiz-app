@@ -1,7 +1,7 @@
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useAuthContext } from "../Auth";
 import Button from "../common/Button";
 import Input from "../common/Input";
 
@@ -35,20 +35,12 @@ const LoginStyled = styled.section`
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useAuthContext();
   const navigate = useNavigate();
 
-  const login = () => {
-    const auth = getAuth();
-    signInWithEmailAndPassword(auth, username, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
-        navigate("/test");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
+  const onLogin = () => {
+    login(username, password);
+    navigate("/test");
   };
 
   return (
@@ -69,7 +61,7 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
         ></Input>
       </InputGroupStyled>
-      <Button size="big" onClick={login} primary>
+      <Button size="big" onClick={onLogin} primary>
         log in
       </Button>
     </LoginStyled>

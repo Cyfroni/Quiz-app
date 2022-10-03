@@ -1,14 +1,13 @@
-import { getAuth } from "firebase/auth";
 import React from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useAuthContext } from "./main";
+import { useAuthContext } from "./Auth";
 
 const MainNavStyled = styled.nav`
   display: flex;
   align-items: center;
   width: 100%;
-  background-color: orangered;
+  background-color: ${({ theme }) => theme.colors.main};
   font-size: 2rem;
   padding: 0 5rem;
 
@@ -29,8 +28,7 @@ const MainNavStyled = styled.nav`
         margin-left: auto;
       }
       &:hover {
-        background-color: orange;
-        color: #333;
+        background-color: ${({ theme }) => theme.colors.main_lighter};
       }
     }
 
@@ -56,12 +54,11 @@ const MainNavStyled = styled.nav`
 `;
 
 export default function Root() {
-  const { user } = useAuthContext();
+  const { user, logout } = useAuthContext();
   const navigate = useNavigate();
 
-  const logout = () => {
-    const auth = getAuth();
-    auth.signOut();
+  const onLogout = () => {
+    logout();
     navigate("/login");
   };
 
@@ -85,7 +82,7 @@ export default function Root() {
           )}
           {user && (
             <li>
-              <button onClick={() => logout()}>Logout</button>
+              <button onClick={onLogout}>Logout</button>
             </li>
           )}
         </ul>

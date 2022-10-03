@@ -5,16 +5,16 @@ const ButtonStyled = styled.button`
   padding: ${({ size }) => (size === "big" ? "2rem 4rem" : "0.5rem 1rem")};
   font-size: ${({ size }) => (size === "big" ? "3rem" : "1.6rem")};
   border-radius: 10px;
-  background-color: ${({ primary }) => (primary ? "orangered" : "white")};
-  color: ${({ primary }) => (primary ? "white" : "orangered")};
+  background-color: ${({ primary, theme }) =>
+    primary ? theme.colors.main : "white"};
+  color: ${({ primary, theme }) => (primary ? "white" : theme.colors.main)};
   border: none;
   box-shadow: 0 0 5px #999;
   transition: all 0.3s;
   cursor: pointer;
 
   &:hover {
-    background-color: orange;
-    color: #333;
+    background-color: ${({ theme }) => theme.colors.main_lighter};
   }
 
   &[disabled] {
