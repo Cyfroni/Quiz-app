@@ -1,11 +1,23 @@
 #test {
-  height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
 
+  margin: 0 auto;
+  margin-top: 10rem;
+  max-width: 60rem;
+
   font-size: 2rem;
+}
+
+#test footer {
+  align-self: center;
+}
+
+footer button {
+  font-size: 1.6rem;
+  padding: 0.5rem;
+  border-radius: 10px;
+  background-color: orangered;
 }
 
 .question {

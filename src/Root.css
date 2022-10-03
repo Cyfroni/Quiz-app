@@ -14,22 +14,24 @@ main {
   width: 100%;
   background-color: orangered;
   font-size: 2rem;
+  padding: 0 5rem;
 }
 
 .main-nav__username {
-  margin-left: 5rem;
-  margin-right: auto;
+  margin-right: 5rem;
 }
 
 .main-nav__navitems {
-  width: 50%;
+  flex: 1;
   display: flex;
-  justify-content: space-between;
   list-style-type: none;
 }
 
 .main-nav__navitems li {
-  flex: 1;
+  padding: 1rem 2rem;
+}
+.main-nav__navitems > li:last-child {
+  margin-left: auto;
 }
 
 .main-nav__navitems a,
@@ -57,8 +59,4 @@ main {
 .main-nav__navitems li:hover {
   background-color: yellowgreen;
   color: black;
-}
-
-.main-nav__navitems a.active {
-  background-color: black;
 }

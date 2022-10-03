@@ -1,11 +1,13 @@
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { getAuth } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import InputGroup from "../common/InputGroup";
 import "./login.css";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const login = () => {
     const auth = getAuth();
@@ -13,6 +15,7 @@ export default function Login() {
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(user);
+        navigate("/test");
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -22,15 +25,15 @@ export default function Login() {
 
   return (
     <section id="login">
-      <input
-        type="text"
+      <InputGroup
         value={username}
         onChange={(e) => setUsername(e.target.value)}
+        label="Username"
       />
-      <input
-        type="text"
+      <InputGroup
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        label="Password"
       />
       <button onClick={login}>log in</button>
     </section>

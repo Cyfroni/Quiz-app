@@ -65,7 +65,7 @@ function Test() {
 
   return (
     <section id="test">
-      <h1>Question: {questionNumber}</h1>
+      <h1>Question: {questionNumber + 1}</h1>
       <article className="question">
         <h2 className="question__question">{question?.question}</h2>
         <ul className="question__answers">

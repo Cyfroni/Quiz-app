@@ -1,17 +1,23 @@
 import { getAuth } from "firebase/auth";
 import React from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuthContext } from "./main";
-import { Link } from "react-router-dom";
 import "./Root.css";
 
 export default function Root() {
   const { user } = useAuthContext();
-  const auth = getAuth();
+  const navigate = useNavigate();
+
+  const logout = () => {
+    const auth = getAuth();
+    auth.signOut();
+    navigate("/login");
+  };
+
   return (
     <>
       <nav className="main-nav">
-        <div className="main-nav__username">{user?.email}</div>
+        <div className="main-nav__username">{user?.email || "ANONYMOUS"}</div>
         <ul className="main-nav__navitems">
           <li>
             <NavLink to="/test">Test</NavLink>
@@ -28,10 +34,7 @@ export default function Root() {
           )}
           {user && (
             <li>
-              <button
-                className="main-nav__logoutbtn"
-                onClick={() => auth.signOut()}
-              >
+              <button className="main-nav__logoutbtn" onClick={() => logout()}>
                 Logout
               </button>
             </li>
