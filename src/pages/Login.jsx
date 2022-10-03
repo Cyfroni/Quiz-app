@@ -1,8 +1,28 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import Button from "../common/Button";
 import InputGroup from "../common/InputGroup";
-import "./login.css";
+
+const LoginStyled = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+
+  margin: 0 auto;
+  margin-top: 10rem;
+  max-width: 60rem;
+
+  font-size: 3rem;
+
+  button {
+    width: 50%;
+
+    margin: 0 auto;
+    margin-top: 8rem;
+  }
+`;
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -24,7 +44,7 @@ export default function Login() {
   };
 
   return (
-    <section id="login">
+    <LoginStyled>
       <InputGroup
         value={username}
         onChange={(e) => setUsername(e.target.value)}
@@ -35,7 +55,7 @@ export default function Login() {
         onChange={(e) => setPassword(e.target.value)}
         label="Password"
       />
-      <button onClick={login}>log in</button>
-    </section>
+      <Button onClick={login}>log in</Button>
+    </LoginStyled>
   );
 }

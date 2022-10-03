@@ -8,7 +8,8 @@ import {
 } from "firebase/database";
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
-import "./Test.css";
+import styled from "styled-components";
+import Button from "../common/Button";
 
 // const QUESTIONS = [
 //   {
@@ -32,6 +33,42 @@ export async function loader() {
   // const data = query(ref(db, "questions"), limitToLast(100));
   // return data.
 }
+
+const TestStyled = styled.section`
+  display: flex;
+  flex-direction: column;
+
+  margin: 0 auto;
+  margin-top: 10rem;
+  max-width: 60rem;
+
+  font-size: 2rem;
+
+  footer {
+    align-self: center;
+  }
+`;
+
+const FooterStyled = styled.footer`
+  margin-top: 5rem;
+  button {
+    padding: 2rem 4rem;
+    margin: 0.5rem;
+  }
+`;
+
+const QuestionStyled = styled.article`
+  margin-top: 2rem;
+
+  ul {
+    margin-top: 1rem;
+    list-style-type: none;
+  }
+
+  input {
+    margin-right: 0.5rem;
+  }
+`;
 
 function Test() {
   const [questionNumber, setQuestionNumber] = useState(0);
@@ -64,11 +101,11 @@ function Test() {
   console.log(questions);
 
   return (
-    <section id="test">
+    <TestStyled>
       <h1>Question: {questionNumber + 1}</h1>
-      <article className="question">
-        <h2 className="question__question">{question?.question}</h2>
-        <ul className="question__answers">
+      <QuestionStyled>
+        <h2>{question?.question}</h2>
+        <ul>
           {Object.entries(question?.answers || {}).map(([key, value]) => (
             <li key={key}>
               <input
@@ -82,23 +119,23 @@ function Test() {
             </li>
           ))}
         </ul>
-      </article>
-      <footer>
-        <button
+      </QuestionStyled>
+      <FooterStyled>
+        <Button
           onClick={() => setQuestionNumber((q) => q - 1)}
           disabled={questionNumber <= 0}
         >
           &larr;
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => next()}
           disabled={questionNumber >= questions.length}
         >
           &rarr;
-        </button>
+        </Button>
         {/* {questionNumber === questions.length && <button>finish</button>} */}
-      </footer>
-    </section>
+      </FooterStyled>
+    </TestStyled>
   );
 }
 

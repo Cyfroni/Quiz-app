@@ -8,10 +8,10 @@ import {
   Outlet,
   RouterProvider,
 } from "react-router-dom";
-import Test, { loader as testLoader } from "./pages/Test";
-import "./index.css";
+import { createGlobalStyle } from "styled-components";
 import AddQuestion from "./pages/AddQuestion";
 import Login from "./pages/Login";
+import Test, { loader as testLoader } from "./pages/Test";
 import Root from "./Root";
 
 const firebaseConfig = {
@@ -91,9 +91,40 @@ export function useAuthContext() {
   return React.useContext(AuthContext);
 }
 
+const GlobalStyle = createGlobalStyle`
+
+  :root {
+    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+  }
+
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 62.5%;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      color: #213547;
+      background-color: #ffffff;
+    }
+  }
+`;
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AuthContextProvider>
+      <GlobalStyle />
       <RouterProvider router={router} />
     </AuthContextProvider>
   </React.StrictMode>

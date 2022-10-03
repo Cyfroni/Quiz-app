@@ -1,6 +1,33 @@
+import { getDatabase, push, ref, set } from "firebase/database";
 import React, { useState } from "react";
-import { getDatabase, ref, set, push } from "firebase/database";
-import "./AddQuestion.css";
+import styled from "styled-components";
+import Button from "../common/Button";
+
+const AddQuestionStyled = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  margin: 0 auto;
+  margin-top: 10rem;
+  max-width: 60rem;
+
+  font-size: 2rem;
+
+  > div > div {
+    display: flex;
+    textarea {
+      font-size: 1.6rem;
+      padding: 0.5rem;
+      border-radius: 10px;
+      flex: 1;
+    }
+  }
+
+  button {
+    align-self: flex-start;
+  }
+`;
 
 export default function AddQuestion() {
   const [question, setQuestion] = useState("");
@@ -33,10 +60,10 @@ export default function AddQuestion() {
   };
 
   return (
-    <section id="add-question">
+    <AddQuestionStyled>
       <div>
         <label htmlFor="question">Question</label>
-        <div className="input-container">
+        <div>
           <textarea
             name="question"
             id="question"
@@ -48,7 +75,7 @@ export default function AddQuestion() {
       {Object.entries(answers).map(([key, value]) => (
         <div key={key}>
           <label htmlFor={key}>{key}</label>
-          <div className="input-container">
+          <div>
             <textarea
               name={key}
               id={key}
@@ -80,12 +107,8 @@ export default function AddQuestion() {
           </div>
         </div>
       ))}
-      <button className="add-answer-btn" onClick={addAnswer}>
-        Add new answer
-      </button>
-      <button className="save-btn" onClick={save}>
-        save
-      </button>
-    </section>
+      <Button onClick={addAnswer}>Add new answer</Button>
+      <Button onClick={save}>save</Button>
+    </AddQuestionStyled>
   );
 }
