@@ -3,7 +3,17 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../common/Button";
-import InputGroup from "../common/InputGroup";
+import Input from "../common/Input";
+
+const InputGroupStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: 2rem;
+    margin-bottom: 5px;
+  }
+`;
 
 const LoginStyled = styled.section`
   display: flex;
@@ -17,8 +27,6 @@ const LoginStyled = styled.section`
   font-size: 3rem;
 
   button {
-    width: 50%;
-
     margin: 0 auto;
     margin-top: 8rem;
   }
@@ -45,17 +53,25 @@ export default function Login() {
 
   return (
     <LoginStyled>
-      <InputGroup
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        label="Username"
-      />
-      <InputGroup
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        label="Password"
-      />
-      <Button onClick={login}>log in</Button>
+      <InputGroupStyled>
+        <label htmlFor="username">Username</label>
+        <Input
+          id="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        ></Input>
+      </InputGroupStyled>
+      <InputGroupStyled>
+        <label htmlFor="password">Password</label>
+        <Input
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        ></Input>
+      </InputGroupStyled>
+      <Button size="big" onClick={login} primary>
+        log in
+      </Button>
     </LoginStyled>
   );
 }

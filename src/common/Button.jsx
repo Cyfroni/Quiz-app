@@ -2,10 +2,11 @@ import React from "react";
 import styled from "styled-components";
 
 const ButtonStyled = styled.button`
-  font-size: 1.6rem;
-  padding: 0.5rem 1rem;
+  padding: ${({ size }) => (size === "big" ? "2rem 4rem" : "0.5rem 1rem")};
+  font-size: ${({ size }) => (size === "big" ? "3rem" : "1.6rem")};
   border-radius: 10px;
-  background-color: orangered;
+  background-color: ${({ primary }) => (primary ? "orangered" : "white")};
+  color: ${({ primary }) => (primary ? "white" : "orangered")};
   border: none;
   box-shadow: 0 0 5px #999;
   transition: all 0.3s;
@@ -13,10 +14,12 @@ const ButtonStyled = styled.button`
 
   &:hover {
     background-color: orange;
+    color: #333;
   }
 
   &[disabled] {
-    background-color: brown;
+    background-color: #ddd;
+    color: #333;
     cursor: initial;
   }
 `;

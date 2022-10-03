@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../common/Button";
+import CheckBox from "../common/CheckBox";
 
 // const QUESTIONS = [
 //   {
@@ -108,8 +109,7 @@ function Test() {
         <ul>
           {Object.entries(question?.answers || {}).map(([key, value]) => (
             <li key={key}>
-              <input
-                type="checkbox"
+              <CheckBox
                 id={key}
                 name={key}
                 value={checkedAnswers[key]}

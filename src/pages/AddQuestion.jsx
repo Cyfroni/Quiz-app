@@ -2,6 +2,25 @@ import { getDatabase, push, ref, set } from "firebase/database";
 import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "../common/Button";
+import CheckBox from "../common/CheckBox";
+import TextArea from "../common/TextArea";
+
+const InputGroupStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: 2rem;
+    margin-bottom: 5px;
+  }
+
+  > div {
+    display: flex;
+    textarea {
+      flex: 1;
+    }
+  }
+`;
 
 const AddQuestionStyled = styled.section`
   display: flex;
@@ -13,20 +32,10 @@ const AddQuestionStyled = styled.section`
   max-width: 60rem;
 
   font-size: 2rem;
+`;
 
-  > div > div {
-    display: flex;
-    textarea {
-      font-size: 1.6rem;
-      padding: 0.5rem;
-      border-radius: 10px;
-      flex: 1;
-    }
-  }
-
-  button {
-    align-self: flex-start;
-  }
+const AddQuestionButton = styled(Button)`
+  align-self: flex-start;
 `;
 
 export default function AddQuestion() {
@@ -61,22 +70,22 @@ export default function AddQuestion() {
 
   return (
     <AddQuestionStyled>
-      <div>
+      <InputGroupStyled>
         <label htmlFor="question">Question</label>
         <div>
-          <textarea
+          <TextArea
             name="question"
             id="question"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
-          ></textarea>
+          ></TextArea>
         </div>
-      </div>
+      </InputGroupStyled>
       {Object.entries(answers).map(([key, value]) => (
-        <div key={key}>
+        <InputGroupStyled key={key}>
           <label htmlFor={key}>{key}</label>
           <div>
-            <textarea
+            <TextArea
               name={key}
               id={key}
               type="text"
@@ -91,8 +100,7 @@ export default function AddQuestion() {
                 }))
               }
             />
-            <input
-              type="checkbox"
+            <CheckBox
               value={value.text}
               onChange={(e) =>
                 setAnswers((answers) => ({
@@ -105,10 +113,12 @@ export default function AddQuestion() {
               }
             />
           </div>
-        </div>
+        </InputGroupStyled>
       ))}
-      <Button onClick={addAnswer}>Add new answer</Button>
-      <Button onClick={save}>save</Button>
+      <AddQuestionButton onClick={addAnswer}>+</AddQuestionButton>
+      <Button onClick={save} primary>
+        Save
+      </Button>
     </AddQuestionStyled>
   );
 }

@@ -24,12 +24,13 @@ const MainNavStyled = styled.nav`
 
     li {
       padding: 1rem 2rem;
+      transition: all 0.3s;
       &:last-child {
         margin-left: auto;
       }
       &:hover {
-        background-color: yellowgreen;
-        color: black;
+        background-color: orange;
+        color: #333;
       }
     }
 
