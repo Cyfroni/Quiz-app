@@ -40,8 +40,9 @@ const TestStyled = styled.section`
   flex-direction: column;
 
   margin: 0 auto;
-  margin-top: 10rem;
-  max-width: 60rem;
+  padding: 10rem 0;
+  /* margin-top: 10rem; */
+  max-width: 80rem;
 
   font-size: 2rem;
 

@@ -17,17 +17,21 @@ const auth = getAuth(app);
 
 const AuthContext = React.createContext({
   user: {},
+  isAdmin: false,
   login: () => {},
   logout: () => {},
 });
 
 export function AuthContextProvider(props) {
   const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   //   const auth = getAuth(app);
   onAuthStateChanged(auth, (user) => {
     if (user) {
       setUser(user);
+      setIsAdmin(user.email === "admin@gmail.com");
+      console.log(user);
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       // const uid = user.uid;
@@ -56,7 +60,7 @@ export function AuthContextProvider(props) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, isAdmin, login, logout }}>
       {props.children}
     </AuthContext.Provider>
   );

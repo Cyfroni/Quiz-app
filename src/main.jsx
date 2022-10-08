@@ -23,28 +23,43 @@ function ProtectedRoute() {
   return <Outlet />;
 }
 
+function AdminRoute() {
+  const { isAdmin } = useAuthContext();
+
+  if (!isAdmin) return <div>not admin</div>;
+
+  return (
+    <ProtectedRoute>
+      <Outlet />
+    </ProtectedRoute>
+  );
+}
+
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      // <AuthContextProvider>
-      <Root />
-      // </AuthContextProvider>
-    ),
-
+    element: <Root />,
     children: [
-      {
-        path: "/test",
-        element: <Test />,
-        loader: testLoader,
-      },
       {
         path: "/login",
         element: <Login />,
       },
+
+      {
+        path: "/test",
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "",
+            element: <Test />,
+            loader: testLoader,
+          },
+        ],
+      },
+
       {
         path: "/admin",
-        element: <ProtectedRoute />,
+        element: <AdminRoute />,
         children: [
           {
             path: "addQuestion",
@@ -80,7 +95,7 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     min-height: 100vh;
-    background-color: ${({ theme }) => theme.colors.secondary}
+    background-color: ${({ theme }) => theme.colors.bg_color}
   }
 
   @media (prefers-color-scheme: light) {

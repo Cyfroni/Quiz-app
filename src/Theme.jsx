@@ -6,7 +6,8 @@ const theme = {
     main: "#ff4500",
     main_lighter: "#ff6a33",
     main_darker: "#cc3700",
-    secondary: "#bfe8d8",
+    bg_color: "#f4f0eb",
+    // secondary: "#a895ff",
   },
   //   fonts: ["sans-serif", "Roboto"],
   //   fontSizes: {

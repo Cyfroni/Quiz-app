@@ -54,7 +54,7 @@ const MainNavStyled = styled.nav`
 `;
 
 export default function Root() {
-  const { user, logout } = useAuthContext();
+  const { user, isAdmin, logout } = useAuthContext();
   const navigate = useNavigate();
 
   const onLogout = () => {
@@ -70,7 +70,7 @@ export default function Root() {
           <li>
             <Link to="/test">Test</Link>
           </li>
-          {user && (
+          {user && isAdmin && (
             <li>
               <Link to="/admin/addQuestion">Add Question</Link>
             </li>

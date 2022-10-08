@@ -15,6 +15,7 @@ const ButtonStyled = styled.button`
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.main_lighter};
+    color: white;
   }
 
   &[disabled] {
