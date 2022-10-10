@@ -76,7 +76,7 @@ const GlobalStyle = createGlobalStyle`
   :root {
     font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
 
-    color-scheme: light dark;
+    /* color-scheme: light dark; */
     color: rgba(255, 255, 255, 0.87);
     background-color: #242424;
   }
@@ -98,12 +98,12 @@ const GlobalStyle = createGlobalStyle`
     background-color: ${({ theme }) => theme.colors.bg_color}
   }
 
-  @media (prefers-color-scheme: light) {
+  /* @media (prefers-color-scheme: light) {
     :root {
       color: #213547;
       background-color: #ffffff;
     }
-  }
+  } */
 `;
 
 ReactDOM.createRoot(document.getElementById("root")).render(
