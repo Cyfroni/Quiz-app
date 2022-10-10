@@ -75,22 +75,33 @@ const QuestionStyled = styled.article`
 function Test() {
   const [questionNumber, setQuestionNumber] = useState(0);
   const [checkedAnswers, setCheckedAnswers] = useState({});
+  const [results, setResults] = useState([]);
 
   // const questions = QUESTIONS
   const questions = useLoaderData();
 
   const question = questions[questionNumber];
 
-  const handleChange = (event) => {
+  const handleChange = (key, checked) => {
     setCheckedAnswers((answs) => ({
       ...answs,
-      [event.target.name]: event.target.checked,
+      [questionNumber]: {
+        ...answs[questionNumber],
+        [key]: checked,
+      },
     }));
   };
 
+  // console.log(checkedAnswers);
+
+  const prev = () => {
+    setResults([]);
+    setQuestionNumber((q) => q - 1);
+  };
+
   const next = () => {
-    console.log(question?.answers);
-    console.log(checkedAnswers);
+    // console.log(question?.answers);
+    // console.log(checkedAnswers);
 
     // let correct = 0;
     // let incorrect = 0;
@@ -100,21 +111,57 @@ function Test() {
     setQuestionNumber((q) => q + 1);
   };
 
-  console.log(questions);
+  const finish = () => {
+    // console.log(checkedAnswers);
+    const res = questions.map((q, ind) => {
+      // console.log("#result " + ind);
+      // console.log(q?.answers);
+      // console.log(checkedAnswers[ind]);
+      // console.log("###");
+      let r = true;
+      Object.entries(q?.answers).forEach(([key, value]) => {
+        if (value.correct !== !!checkedAnswers[ind]?.[key]) {
+          // console.log(value.correct);
+          // console.log(checkedAnswers[ind]?.[key]);
+          r = false;
+        }
+      });
+
+      return r;
+    });
+    setResults(res);
+  };
+
+  // console.log("**");
+  // console.log(questions);
+  // console.log(checkedAnswers);
+  // console.log("//");
 
   return (
     <TestStyled>
-      <h1>Question: {questionNumber + 1}</h1>
+      <h1>
+        {questionNumber < questions.length
+          ? `Question: ${questionNumber + 1} / ${questions.length}`
+          : "The End"}
+      </h1>
+      <ul>
+        {results.map((r, ind) => (
+          <li key={ind}>
+            Question {ind}: {r ? "Correct" : "Incorrect"}
+          </li>
+        ))}
+      </ul>
       <QuestionStyled>
         <h2>{question?.question}</h2>
         <ul>
           {Object.entries(question?.answers || {}).map(([key, value]) => (
-            <li key={key}>
+            <li key={key + questionNumber}>
               <CheckBox
-                id={key}
-                name={key}
-                value={checkedAnswers[key]}
-                onChange={handleChange}
+                id={key + questionNumber}
+                name={key + questionNumber}
+                value={checkedAnswers[questionNumber]?.[key] || ""}
+                checked={checkedAnswers[questionNumber]?.[key] || ""}
+                onChange={(e) => handleChange(key, e.target.checked)}
               />
               <label htmlFor={key}>{value.text}</label>
             </li>
@@ -122,19 +169,20 @@ function Test() {
         </ul>
       </QuestionStyled>
       <FooterStyled>
-        <Button
-          onClick={() => setQuestionNumber((q) => q - 1)}
-          disabled={questionNumber <= 0}
-        >
+        <Button onClick={() => prev()} disabled={questionNumber <= 0}>
           &larr;
         </Button>
-        <Button
-          onClick={() => next()}
-          disabled={questionNumber >= questions.length}
-        >
-          &rarr;
-        </Button>
-        {/* {questionNumber === questions.length && <button>finish</button>} */}
+        {questionNumber !== questions.length && (
+          <Button
+            onClick={() => next()}
+            disabled={questionNumber >= questions.length}
+          >
+            &rarr;
+          </Button>
+        )}
+        {questionNumber === questions.length && (
+          <Button onClick={() => finish()}>finish</Button>
+        )}
       </FooterStyled>
     </TestStyled>
   );
