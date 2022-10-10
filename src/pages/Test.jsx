@@ -66,6 +66,14 @@ const QuestionStyled = styled.article`
   }
 `;
 
+const HeaderStyled = styled.header`
+  display: flex;
+`;
+
+const FinishButtonStyled = styled(Button)`
+  margin-left: auto;
+`;
+
 const CorrectLabelStyled = styled.label`
   color: ${({ correct, showCorrect }) =>
     showCorrect ? (correct ? "green" : "red") : "inherit"};
@@ -137,11 +145,20 @@ function Test() {
 
   return (
     <TestStyled>
-      <h1>
-        {isFinishScreen
-          ? "The End"
-          : `Question: ${questionNumber + 1} / ${questions.length}`}
-      </h1>
+      <HeaderStyled>
+        <h1>
+          {isFinishScreen
+            ? "The End"
+            : `Question: ${questionNumber + 1} / ${questions.length}`}
+        </h1>
+        {!isFinishScreen && (
+          <FinishButtonStyled
+            onClick={() => setShowCorrect((showCorrect) => !showCorrect)}
+          >
+            Show Correct Answers
+          </FinishButtonStyled>
+        )}
+      </HeaderStyled>
       {isFinishScreen && (
         <ul>
           {results.map((r, ind) => (
@@ -153,11 +170,7 @@ function Test() {
       )}
       <QuestionStyled>
         <h2>{question?.question}</h2>
-        {!isFinishScreen && (
-          <Button onClick={() => setShowCorrect((showCorrect) => !showCorrect)}>
-            Show Correct
-          </Button>
-        )}
+
         <ul>
           {Object.entries(question?.answers || {}).map(
             ([key, { correct, text }]) => (
