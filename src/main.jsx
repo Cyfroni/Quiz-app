@@ -5,6 +5,8 @@ import {
   createBrowserRouter,
   Navigate,
   Outlet,
+  Route,
+  Routes,
   RouterProvider,
 } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
@@ -14,6 +16,10 @@ import Login from "./pages/Login";
 import Test, { loader as testLoader } from "./pages/Test";
 import Root from "./Root";
 import ThemeProvider from "./Theme";
+
+function NotFoundPage() {
+  return <div>Not found!</div>;
+}
 
 function ProtectedRoute() {
   const { user } = useAuthContext();
@@ -26,7 +32,7 @@ function ProtectedRoute() {
 function AdminRoute() {
   const { isAdmin } = useAuthContext();
 
-  if (!isAdmin) return <div>not admin</div>;
+  if (!isAdmin) return <NotFoundPage />;
 
   return (
     <ProtectedRoute>
@@ -35,14 +41,37 @@ function AdminRoute() {
   );
 }
 
+function LoginRoute() {
+  const { user } = useAuthContext();
+
+  if (user) return <Navigate to="/" />;
+
+  return <Outlet />;
+}
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
     children: [
       {
+        path: "",
+        element: <div>Hello human</div>,
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
+      },
+
+      {
         path: "/login",
-        element: <Login />,
+        element: <LoginRoute />,
+        children: [
+          {
+            path: "",
+            element: <Login />,
+          },
+        ],
       },
 
       {
