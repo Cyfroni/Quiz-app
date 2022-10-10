@@ -1,12 +1,5 @@
-import {
-  child,
-  get,
-  getDatabase,
-  ref,
-  query,
-  limitToLast,
-} from "firebase/database";
-import { useState } from "react";
+import { child, get, getDatabase, ref } from "firebase/database";
+import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../common/Button";
@@ -52,7 +45,8 @@ const TestStyled = styled.section`
 `;
 
 const FooterStyled = styled.footer`
-  margin-top: 5rem;
+  position: absolute;
+  bottom: 3rem;
   button {
     padding: 2rem 4rem;
     margin: 0.5rem;
@@ -72,10 +66,16 @@ const QuestionStyled = styled.article`
   }
 `;
 
+const CorrectLabelStyled = styled.label`
+  color: ${({ correct, showCorrect }) =>
+    showCorrect ? (correct ? "green" : "red") : "inherit"};
+`;
+
 function Test() {
   const [questionNumber, setQuestionNumber] = useState(0);
   const [checkedAnswers, setCheckedAnswers] = useState({});
   const [results, setResults] = useState([]);
+  const [showCorrect, setShowCorrect] = useState(false);
 
   // const questions = QUESTIONS
   const questions = useLoaderData();
@@ -92,37 +92,38 @@ function Test() {
     }));
   };
 
-  // console.log(checkedAnswers);
-
   const prev = () => {
-    setResults([]);
-    setQuestionNumber((q) => q - 1);
+    setQuestionNumber((q) => (q === 0 ? 0 : q - 1));
   };
 
   const next = () => {
-    // console.log(question?.answers);
-    // console.log(checkedAnswers);
-
-    // let correct = 0;
-    // let incorrect = 0;
-
-    // console.log(Object.entries(question?.answers).forEach([key, {correct}] => )
-
-    setQuestionNumber((q) => q + 1);
+    setQuestionNumber((q) => (q === questions.length ? q : q + 1));
   };
 
+  useEffect(() => {
+    const leftArrowListener = ({ key }) => key === "ArrowLeft" && prev();
+    const rightArrowListener = ({ key }) => key === "ArrowRight" && next();
+    window.addEventListener("keydown", leftArrowListener);
+    window.addEventListener("keydown", rightArrowListener);
+    return () => {
+      window.removeEventListener("keydown", leftArrowListener);
+      window.removeEventListener("keydown", rightArrowListener);
+    };
+  }, [prev, next]);
+
+  useEffect(() => {
+    setResults([]);
+    setShowCorrect(false);
+    if (questionNumber === questions.length) {
+      finish();
+    }
+  }, [questionNumber]);
+
   const finish = () => {
-    // console.log(checkedAnswers);
     const res = questions.map((q, ind) => {
-      // console.log("#result " + ind);
-      // console.log(q?.answers);
-      // console.log(checkedAnswers[ind]);
-      // console.log("###");
       let r = true;
       Object.entries(q?.answers).forEach(([key, value]) => {
         if (value.correct !== !!checkedAnswers[ind]?.[key]) {
-          // console.log(value.correct);
-          // console.log(checkedAnswers[ind]?.[key]);
           r = false;
         }
       });
@@ -132,56 +133,65 @@ function Test() {
     setResults(res);
   };
 
-  // console.log("**");
-  // console.log(questions);
-  // console.log(checkedAnswers);
-  // console.log("//");
+  const isFinishScreen = questionNumber >= questions.length;
 
   return (
     <TestStyled>
       <h1>
-        {questionNumber < questions.length
-          ? `Question: ${questionNumber + 1} / ${questions.length}`
-          : "The End"}
+        {isFinishScreen
+          ? "The End"
+          : `Question: ${questionNumber + 1} / ${questions.length}`}
       </h1>
-      <ul>
-        {results.map((r, ind) => (
-          <li key={ind}>
-            Question {ind}: {r ? "Correct" : "Incorrect"}
-          </li>
-        ))}
-      </ul>
-      <QuestionStyled>
-        <h2>{question?.question}</h2>
+      {isFinishScreen && (
         <ul>
-          {Object.entries(question?.answers || {}).map(([key, value]) => (
-            <li key={key + questionNumber}>
-              <CheckBox
-                id={key + questionNumber}
-                name={key + questionNumber}
-                value={checkedAnswers[questionNumber]?.[key] || ""}
-                checked={checkedAnswers[questionNumber]?.[key] || ""}
-                onChange={(e) => handleChange(key, e.target.checked)}
-              />
-              <label htmlFor={key}>{value.text}</label>
+          {results.map((r, ind) => (
+            <li key={ind}>
+              Question {ind}: {r ? "Correct" : "Incorrect"}
             </li>
           ))}
+        </ul>
+      )}
+      <QuestionStyled>
+        <h2>{question?.question}</h2>
+        {!isFinishScreen && (
+          <Button onClick={() => setShowCorrect((showCorrect) => !showCorrect)}>
+            Show Correct
+          </Button>
+        )}
+        <ul>
+          {Object.entries(question?.answers || {}).map(
+            ([key, { correct, text }]) => (
+              <li key={key + questionNumber}>
+                <CheckBox
+                  id={key + questionNumber}
+                  name={key + questionNumber}
+                  value={checkedAnswers[questionNumber]?.[key] || ""}
+                  checked={checkedAnswers[questionNumber]?.[key] || ""}
+                  onChange={(e) => handleChange(key, e.target.checked)}
+                />
+                <CorrectLabelStyled
+                  htmlFor={key}
+                  correct={correct}
+                  showCorrect={showCorrect}
+                >
+                  {text}
+                </CorrectLabelStyled>
+              </li>
+            )
+          )}
         </ul>
       </QuestionStyled>
       <FooterStyled>
         <Button onClick={() => prev()} disabled={questionNumber <= 0}>
           &larr;
         </Button>
-        {questionNumber !== questions.length && (
-          <Button
-            onClick={() => next()}
-            disabled={questionNumber >= questions.length}
-          >
-            &rarr;
-          </Button>
+        {questionNumber < questions.length - 1 && (
+          <Button onClick={() => next()}>&rarr;</Button>
         )}
-        {questionNumber === questions.length && (
-          <Button onClick={() => finish()}>finish</Button>
+        {questionNumber === questions.length - 1 && (
+          <Button primary onClick={() => next()}>
+            finish
+          </Button>
         )}
       </FooterStyled>
     </TestStyled>
