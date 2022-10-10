@@ -102,13 +102,13 @@ export default function AddQuestion() {
               }
             />
             <CheckBox
-              value={value.text}
+              checked={value.correct}
               onChange={(e) =>
                 setAnswers((answers) => ({
                   ...answers,
                   [key]: {
                     text: value.text,
-                    correct: e.target.value,
+                    correct: e.target.checked,
                   },
                 }))
               }
