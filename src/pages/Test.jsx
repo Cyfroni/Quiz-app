@@ -4,6 +4,7 @@ import { useLoaderData } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../common/Button";
 import CheckBox from "../common/CheckBox";
+import ToggleSwitch from "../common/ToggleSwitch";
 
 // const QUESTIONS = [
 //   {
@@ -78,14 +79,12 @@ const HeaderStyled = styled.header`
   padding: 1rem;
 `;
 
-const FinishButtonStyled = styled(Button)`
-  margin-left: auto;
-`;
-
 const CorrectLabelStyled = styled.label`
   color: ${({ correct, showCorrect }) =>
     showCorrect ? (correct ? "green" : "red") : "inherit"};
 `;
+
+const OptionsStyled = styled.aside``;
 
 function Test() {
   const [questionNumber, setQuestionNumber] = useState(0);
@@ -159,13 +158,6 @@ function Test() {
             ? "The End"
             : `Question: ${questionNumber + 1} / ${questions.length}`}
         </h1>
-        {!isFinishScreen && (
-          <FinishButtonStyled
-            onClick={() => setShowCorrect((showCorrect) => !showCorrect)}
-          >
-            Show Correct Answers
-          </FinishButtonStyled>
-        )}
       </HeaderStyled>
       {isFinishScreen && (
         <ul>
@@ -201,6 +193,15 @@ function Test() {
             )
           )}
         </ul>
+        {!isFinishScreen && (
+          <OptionsStyled>
+            <ToggleSwitch
+              checked={showCorrect}
+              onClick={() => setShowCorrect((showCorrect) => !showCorrect)}
+              label="Show correct answers"
+            />
+          </OptionsStyled>
+        )}
       </QuestionStyled>
       <FooterStyled>
         <Button onClick={() => prev()} disabled={questionNumber <= 0}>
