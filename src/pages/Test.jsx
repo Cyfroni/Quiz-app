@@ -29,13 +29,9 @@ export async function loader() {
 }
 
 const TestStyled = styled.section`
+  flex: 1;
   display: flex;
   flex-direction: column;
-
-  margin: 0 auto;
-  padding: 10rem 0;
-  /* margin-top: 10rem; */
-  max-width: 80rem;
 
   font-size: 2rem;
 
@@ -45,7 +41,8 @@ const TestStyled = styled.section`
 `;
 
 const FooterStyled = styled.footer`
-  position: absolute;
+  margin-top: auto;
+  position: sticky;
   bottom: 3rem;
   button {
     padding: 2rem 4rem;
@@ -54,9 +51,13 @@ const FooterStyled = styled.footer`
 `;
 
 const QuestionStyled = styled.article`
-  margin-top: 2rem;
+  padding: 0 10rem;
+  margin: 2rem auto;
+  text-align: center;
 
   ul {
+    padding: 5rem;
+    text-align: left;
     margin-top: 1rem;
     list-style-type: none;
   }
@@ -68,6 +69,13 @@ const QuestionStyled = styled.article`
 
 const HeaderStyled = styled.header`
   display: flex;
+
+  h1 {
+    color: ${({ theme }) => theme.colors.main_lighter};
+  }
+
+  box-shadow: 0px 0px 2px #555;
+  padding: 1rem;
 `;
 
 const FinishButtonStyled = styled(Button)`
