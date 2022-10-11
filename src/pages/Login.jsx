@@ -40,7 +40,7 @@ export default function Login() {
 
   const onLogin = () => {
     login(username, password);
-    navigate("/test");
+    navigate("/");
   };
 
   return (

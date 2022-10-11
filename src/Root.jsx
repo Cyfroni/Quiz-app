@@ -59,7 +59,7 @@ export default function Root() {
 
   const onLogout = () => {
     logout();
-    navigate("/login");
+    navigate("/");
   };
 
   return (
