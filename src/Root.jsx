@@ -68,13 +68,19 @@ export default function Root() {
         <p>{user?.email || "ANONYMOUS"}</p>
         <ul>
           <li>
-            <Link to="/test">Test</Link>
+            <Link to="/">Home</Link>
           </li>
+          {user && (
+            <li>
+              <Link to="/user/test">Test</Link>
+            </li>
+          )}
           {user && isAdmin && (
             <li>
               <Link to="/admin/addQuestion">Add Question</Link>
             </li>
           )}
+
           {!user && (
             <li>
               <Link to="/login">Login</Link>

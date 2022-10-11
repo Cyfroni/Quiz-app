@@ -26,12 +26,11 @@ export function AuthContextProvider(props) {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  //   const auth = getAuth(app);
   onAuthStateChanged(auth, (user) => {
     if (user) {
       setUser(user);
       setIsAdmin(user.email === "admin@gmail.com");
-      console.log(user);
+      // console.log(user);
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       // const uid = user.uid;
@@ -47,7 +46,7 @@ export function AuthContextProvider(props) {
     signInWithEmailAndPassword(auth, username, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log(user);
+        // console.log(user);
       })
       .catch((error) => {
         const errorCode = error.code;

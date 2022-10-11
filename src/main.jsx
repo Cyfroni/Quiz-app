@@ -1,12 +1,9 @@
-import { initializeApp } from "firebase/app";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import {
   createBrowserRouter,
   Navigate,
   Outlet,
-  Route,
-  Routes,
   RouterProvider,
 } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
@@ -24,7 +21,7 @@ function NotFoundPage() {
 function ProtectedRoute() {
   const { user } = useAuthContext();
 
-  if (!user) return <Navigate to="/login" />;
+  if (!user) return <NotFoundPage />;
 
   return <Outlet />;
 }
@@ -44,7 +41,7 @@ function AdminRoute() {
 function LoginRoute() {
   const { user } = useAuthContext();
 
-  if (user) return <Navigate to="/" />;
+  if (user) return <Navigate to="/" replace />;
 
   return <Outlet />;
 }
@@ -64,7 +61,7 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "/login",
+        path: "login",
         element: <LoginRoute />,
         children: [
           {
@@ -75,11 +72,11 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "/test",
+        path: "user",
         element: <ProtectedRoute />,
         children: [
           {
-            path: "",
+            path: "test",
             element: <Test />,
             loader: testLoader,
           },
@@ -87,7 +84,7 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "/admin",
+        path: "admin",
         element: <AdminRoute />,
         children: [
           {
