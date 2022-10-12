@@ -6,24 +6,14 @@ import styled from "styled-components";
 import Button from "../common/Button";
 import CheckBox from "../common/CheckBox";
 import ToggleSwitch from "../common/ToggleSwitch";
-
-// const QUESTIONS = [
-//   {
-//     question: "What is love?",
-//     answers: ["love", "hurt me", "baby dont hurt me"],
-//     correct: [2],
-//   },
-//   {
-//     question: "Is dollar expensive?",
-//     answers: ["yes", "no", "very"],
-//     correct: [0, 2],
-//   },
-// ];
+// import mockdb from "./_mockdb.json";
 
 export async function loader() {
   const dbRef = ref(getDatabase());
   const snapshot = await get(child(dbRef, `questions`));
   return Object.values(snapshot.val());
+
+  // return Object.values(mockdb.questions);
 
   // const db = getDatabase();
   // const data = query(ref(db, "questions"), limitToLast(100));
@@ -96,7 +86,6 @@ function Test() {
   const [currentQuestion, setCurrentQuestion] = useState("");
   const [currentAnswers, setCurrentAnswers] = useState([]);
 
-  // const questions = QUESTIONS
   const questions = useLoaderData();
 
   const handleChange = (key, checked) => {

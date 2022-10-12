@@ -29,7 +29,6 @@ const AddQuestionStyled = styled.section`
 
   margin: 0 auto;
   padding: 10rem 0;
-  /* margin-top: 10rem; */
   max-width: 60rem;
 
   font-size: 2rem;

@@ -1,0 +1,59 @@
+{
+  "questions": {
+    "id-1": {
+      "answers": {
+        "Answer 1": {
+          "correct": false,
+          "text": "Configure a new load balancer for the new version of the API"
+        },
+        "Answer 2": {
+          "correct": false,
+          "text": "Reconfigure old clients to use a new endpoint for the new API"
+        },
+        "Answer 3": {
+          "correct": false,
+          "text": "Have the old API forward traffic to the new API based on the path"
+        },
+        "Answer 4": {
+          "correct": true,
+          "text": "Use separate backend pools for each API path behind the load balancer Most "
+        }
+      },
+      "question": "Your company has decided to make a major revision of their API in order to create better experiences for their developers. They need to keep the old version of the API available and deployable, while allowing new customers and testers to try out the new API. They want to keep the same SSL and DNS records in place to serve both APIs.\nWhat should they do?"
+    },
+    "id-2": {
+      "answers": {
+        "Answer 1": {
+          "correct": false,
+          "text": "Geo-redundant storage"
+        },
+        "Answer 2": {
+          "correct": true,
+          "text": "Read-only geo-redundant storage"
+        },
+        "Answer 3": {
+          "correct": false,
+          "text": "Zone-redundant storage"
+        },
+        "Answer 4": {
+          "correct": false,
+          "text": "Locally redundant storage"
+        }
+      },
+      "question": "Your company has datacenters in Los Angeles and New York. The company has a Microsoft Azure subscription. You are configuring the two datacenters as geo-clustered sites for site resiliency. You need to recommend an Azure storage redundancy option. You have the following data storage requirements: ✑ Data must be stored on multiple nodes. ✑ Data must be stored on nodes in separate geographic locations. ✑ Data can be read from the secondary location as well as from the primary location Which of the following Azure stored redundancy options should you recommend?"
+    },
+    "id-3": {
+      "answers": {
+        "Answer 1": {
+          "correct": false,
+          "text": "Yes"
+        },
+        "Answer 2": {
+          "correct": true,
+          "text": "No"
+        }
+      },
+      "question": "Note: The question is included in a number of questions that depicts the identical set-up. However, every question has a distinctive result. Establish if the solution satisfies the requirements.\nYou are tasked with deploying Azure virtual machines for your company.\nYou need to make use of the appropriate cloud deployment solution.\nSolution: You should make use of Software as a Service (SaaS).\nDoes the solution meet the goal?"
+    }
+  }
+}
