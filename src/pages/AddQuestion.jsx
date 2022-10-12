@@ -1,9 +1,9 @@
 import { getDatabase, push, ref, set } from "firebase/database";
 import React, { useState } from "react";
 import styled from "styled-components";
-import Button from "../common/Button";
-import CheckBox from "../common/CheckBox";
-import TextArea from "../common/TextArea";
+import Button from "../components/common/Button";
+import CheckBox from "../components/common/CheckBox";
+import TextArea from "../components/common/TextArea";
 
 const InputGroupStyled = styled.div`
   display: flex;

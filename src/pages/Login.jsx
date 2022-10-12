@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAuthContext } from "../Auth";
-import Button from "../common/Button";
-import Input from "../common/Input";
+import Button from "../components/common/Button";
+import Input from "../components/common/Input";
 
 const InputGroupStyled = styled.div`
   display: flex;

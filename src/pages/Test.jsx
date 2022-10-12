@@ -3,9 +3,10 @@ import _shuffle from "lodash.shuffle";
 import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import styled from "styled-components";
-import Button from "../common/Button";
-import CheckBox from "../common/CheckBox";
-import ToggleSwitch from "../common/ToggleSwitch";
+import Button from "../components/common/Button";
+import CheckBox from "../components/common/CheckBox";
+import ToggleSwitch from "../components/common/ToggleSwitch";
+import useKeyDown from "../utils/useKeyDown";
 // import mockdb from "./_mockdb.json";
 
 export async function loader() {
@@ -107,31 +108,6 @@ function Test() {
   };
 
   useEffect(() => {
-    const leftArrowListener = ({ key }) => key === "ArrowLeft" && prev();
-    const rightArrowListener = ({ key }) => key === "ArrowRight" && next();
-    window.addEventListener("keydown", leftArrowListener);
-    window.addEventListener("keydown", rightArrowListener);
-    return () => {
-      window.removeEventListener("keydown", leftArrowListener);
-      window.removeEventListener("keydown", rightArrowListener);
-    };
-  }, [prev, next]);
-
-  useEffect(() => {
-    const sKeyListener = ({ key }) =>
-      key === "s" && setShowCorrect((showCorrect) => !showCorrect);
-    const rkeyListener = ({ key }) =>
-      key === "r" &&
-      setRandomizeAnswers((randomizeAnswers) => !randomizeAnswers);
-    window.addEventListener("keydown", sKeyListener);
-    window.addEventListener("keydown", rkeyListener);
-    return () => {
-      window.removeEventListener("keydown", sKeyListener);
-      window.removeEventListener("keydown", rkeyListener);
-    };
-  }, []);
-
-  useEffect(() => {
     setCurrentQuestion(questions[questionNumber]?.question);
     setCurrentAnswers(Object.entries(questions[questionNumber]?.answers || {}));
     setResults([]);
@@ -154,6 +130,13 @@ function Test() {
     });
     setResults(res);
   };
+
+  useKeyDown("ArrowLeft", prev);
+  useKeyDown("ArrowRight", next);
+  useKeyDown("s", () => setShowCorrect((showCorrect) => !showCorrect));
+  useKeyDown("r", () =>
+    setRandomizeAnswers((randomizeAnswers) => !randomizeAnswers)
+  );
 
   const isFinishScreen = questionNumber >= questions.length;
 
