@@ -1,4 +1,5 @@
 import { child, get, getDatabase, ref } from "firebase/database";
+import _shuffle from "lodash.shuffle";
 import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import styled from "styled-components";
@@ -91,11 +92,12 @@ function Test() {
   const [checkedAnswers, setCheckedAnswers] = useState({});
   const [results, setResults] = useState([]);
   const [showCorrect, setShowCorrect] = useState(false);
+  const [randomizeAnswers, setRandomizeAnswers] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState("");
+  const [currentAnswers, setCurrentAnswers] = useState([]);
 
   // const questions = QUESTIONS
   const questions = useLoaderData();
-
-  const question = questions[questionNumber];
 
   const handleChange = (key, checked) => {
     setCheckedAnswers((answs) => ({
@@ -127,6 +129,22 @@ function Test() {
   }, [prev, next]);
 
   useEffect(() => {
+    const sKeyListener = ({ key }) =>
+      key === "s" && setShowCorrect((showCorrect) => !showCorrect);
+    const rkeyListener = ({ key }) =>
+      key === "r" &&
+      setRandomizeAnswers((randomizeAnswers) => !randomizeAnswers);
+    window.addEventListener("keydown", sKeyListener);
+    window.addEventListener("keydown", rkeyListener);
+    return () => {
+      window.removeEventListener("keydown", sKeyListener);
+      window.removeEventListener("keydown", rkeyListener);
+    };
+  }, []);
+
+  useEffect(() => {
+    setCurrentQuestion(questions[questionNumber]?.question);
+    setCurrentAnswers(Object.entries(questions[questionNumber]?.answers || {}));
     setResults([]);
     setShowCorrect(false);
     if (questionNumber === questions.length) {
@@ -150,6 +168,15 @@ function Test() {
 
   const isFinishScreen = questionNumber >= questions.length;
 
+  useEffect(() => {
+    if (randomizeAnswers)
+      setCurrentAnswers((currentAnswers) => _shuffle(currentAnswers));
+    else
+      setCurrentAnswers(
+        Object.entries(questions[questionNumber]?.answers || {})
+      );
+  }, [randomizeAnswers, questionNumber]);
+
   return (
     <TestStyled>
       <HeaderStyled>
@@ -169,36 +196,41 @@ function Test() {
         </ul>
       )}
       <QuestionStyled>
-        <h2>{question?.question}</h2>
+        <h2>{currentQuestion}</h2>
 
         <ul>
-          {Object.entries(question?.answers || {}).map(
-            ([key, { correct, text }]) => (
-              <li key={key + questionNumber}>
-                <CheckBox
-                  id={key + questionNumber}
-                  name={key + questionNumber}
-                  value={checkedAnswers[questionNumber]?.[key] || ""}
-                  checked={checkedAnswers[questionNumber]?.[key] || ""}
-                  onChange={(e) => handleChange(key, e.target.checked)}
-                />
-                <CorrectLabelStyled
-                  htmlFor={key}
-                  correct={correct}
-                  showCorrect={showCorrect}
-                >
-                  {text}
-                </CorrectLabelStyled>
-              </li>
-            )
-          )}
+          {currentAnswers.map(([key, { correct, text }]) => (
+            <li key={key + questionNumber}>
+              <CheckBox
+                id={key + questionNumber}
+                name={key + questionNumber}
+                value={checkedAnswers[questionNumber]?.[key] || ""}
+                checked={checkedAnswers[questionNumber]?.[key] || ""}
+                onChange={(e) => handleChange(key, e.target.checked)}
+              />
+              <CorrectLabelStyled
+                htmlFor={key}
+                correct={correct}
+                showCorrect={showCorrect}
+              >
+                {text}
+              </CorrectLabelStyled>
+            </li>
+          ))}
         </ul>
         {!isFinishScreen && (
           <OptionsStyled>
             <ToggleSwitch
               checked={showCorrect}
-              onClick={() => setShowCorrect((showCorrect) => !showCorrect)}
-              label="Show correct answers"
+              onChange={() => setShowCorrect((showCorrect) => !showCorrect)}
+              label="Show correct answers [s]"
+            />
+            <ToggleSwitch
+              checked={randomizeAnswers}
+              onChange={() =>
+                setRandomizeAnswers((randomizeAnswers) => !randomizeAnswers)
+              }
+              label="Randomize answers [r]"
             />
           </OptionsStyled>
         )}
