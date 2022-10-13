@@ -78,37 +78,65 @@ const CorrectLabelStyled = styled.label`
 
 const OptionsStyled = styled.aside``;
 
-function reducer(state, action) {
-  const getAnswers = (questionNumber, randomized) => {
-    if (randomized) return state.randomizedAnswers[questionNumber];
+const ResultsStyled = styled.ul`
+  margin: 2rem;
+  list-style: none;
+`;
 
-    return Object.entries(state.questions[questionNumber]?.answers || {});
+const ResultStyled = styled.li`
+  color: ${({ correct }) => (correct ? "green" : "red")};
+
+  a {
+    color: ${({ correct }) => (correct ? "green" : "red")};
+    text-decoration: none;
+  }
+`;
+
+function getAnswer(q) {
+  return Object.entries(q?.answers || {});
+}
+
+function reducer(state, action) {
+  const setQuestion = (questionNumber, randomized) => {
+    return {
+      questionNumber,
+      randomized,
+      currentQuestion: state.questions[questionNumber]?.question,
+      currentAnswers: randomized
+        ? state.randomizedAnswers[questionNumber]
+        : getAnswer(state.questions[questionNumber]),
+    };
   };
 
   if (action.type === "nextQuestion") {
     const questionNumber = state.questionNumber + 1;
-    if (questionNumber >= state.questions.length) return state;
+    if (questionNumber >= state.questions.length)
+      return {
+        ...state,
+        questionNumber: state.questions.length,
+      };
     return {
       ...state,
-      questionNumber,
-      currentQuestion: state.questions[questionNumber]?.question,
-      currentAnswers: getAnswers(questionNumber, state.randomized),
+      ...setQuestion(questionNumber, state.randomized),
     };
   } else if (action.type === "prevQuestion") {
     const questionNumber = state.questionNumber - 1;
     if (questionNumber < 0) return state;
     return {
       ...state,
-      questionNumber: questionNumber,
-      currentQuestion: state.questions[questionNumber]?.question,
-      currentAnswers: getAnswers(questionNumber, state.randomized),
+      ...setQuestion(questionNumber, state.randomized),
     };
   } else if (action.type === "randomize") {
     const randomized = !state.randomized;
     return {
       ...state,
-      randomized,
-      currentAnswers: getAnswers(state.questionNumber, randomized),
+      ...setQuestion(state.questionNumber, randomized),
+    };
+  } else if (action.type === "setQuestion") {
+    const questionNumber = action.payload;
+    return {
+      ...state,
+      ...setQuestion(questionNumber, state.randomized),
     };
   }
 
@@ -119,19 +147,19 @@ function Test() {
   const [checkedAnswers, setCheckedAnswers] = useState({});
   const [results, setResults] = useState([]);
   const [showCorrect, setShowCorrect] = useState(false);
+  const [finishReached, setFinishReached] = useState(false);
 
   const [state, dispatch] = useReducer(
     reducer,
     useLoaderData(),
     (loaderData) => ({
       questions: loaderData,
-      randomizedAnswers: loaderData.map((d) =>
-        _shuffle(Object.entries(d?.answers || {}))
-      ),
-      currentQuestion: loaderData[0]?.question,
-      currentAnswers: Object.entries(loaderData[0]?.answers || {}),
+      randomizedAnswers: loaderData.map((d) => _shuffle(getAnswer(d))),
+
       questionNumber: 0,
       randomized: false,
+      currentQuestion: loaderData[0]?.question,
+      currentAnswers: getAnswer(loaderData[0]),
     })
   );
 
@@ -156,9 +184,10 @@ function Test() {
   };
 
   const finish = () => {
-    const res = questions.map((q, ind) => {
+    const res = state.questions.map((q, ind) => {
       let r = true;
-      Object.entries(q?.answers).forEach(([key, value]) => {
+
+      getAnswer(q).forEach(([key, value]) => {
         if (value.correct !== !!checkedAnswers[ind]?.[key]) {
           r = false;
         }
@@ -167,6 +196,7 @@ function Test() {
       return r;
     });
     setResults(res);
+    setFinishReached(true);
   };
 
   useKeyDown("ArrowLeft", prev);
@@ -180,11 +210,8 @@ function Test() {
   const isFinishScreen = questionNumber >= questionsLength;
 
   useEffect(() => {
-    setResults([]);
-    // setShowCorrect(false);
-    if (isFinishScreen) {
-      finish();
-    }
+    if (!finishReached) setShowCorrect(false);
+    if (isFinishScreen) finish();
   }, [state.questionNumber]);
 
   return (
@@ -197,38 +224,46 @@ function Test() {
         </h1>
       </HeaderStyled>
       {isFinishScreen && (
-        <ul>
+        <ResultsStyled>
           {results.map((r, ind) => (
-            <li key={ind}>
-              Question {ind}: {r ? "Correct" : "Incorrect"}
-            </li>
-          ))}
-        </ul>
-      )}
-      <QuestionStyled>
-        <h2>{currentQuestion}</h2>
-
-        <ul>
-          {currentAnswers.map(([key, { correct, text }]) => (
-            <li key={key + questionNumber}>
-              <CheckBox
-                id={key + questionNumber}
-                name={key + questionNumber}
-                value={checkedAnswers[questionNumber]?.[key] || ""}
-                checked={checkedAnswers[questionNumber]?.[key] || ""}
-                onChange={(e) => handleChange(key, e.target.checked)}
-              />
-              <CorrectLabelStyled
-                htmlFor={key}
-                correct={correct}
-                showCorrect={showCorrect}
+            <ResultStyled key={ind} correct={r}>
+              <a
+                href="#"
+                onClick={() => {
+                  dispatch({ type: "setQuestion", payload: ind });
+                  setShowCorrect(true);
+                }}
               >
-                {text}
-              </CorrectLabelStyled>
-            </li>
+                Question {ind + 1}: {r ? "Correct" : "Incorrect"}
+              </a>
+            </ResultStyled>
           ))}
-        </ul>
-        {!isFinishScreen && (
+        </ResultsStyled>
+      )}
+      {!isFinishScreen && (
+        <QuestionStyled>
+          <h2>{currentQuestion}</h2>
+
+          <ul>
+            {currentAnswers.map(([key, { correct, text }]) => (
+              <li key={key + questionNumber}>
+                <CheckBox
+                  id={key + questionNumber}
+                  name={key + questionNumber}
+                  value={checkedAnswers[questionNumber]?.[key] || ""}
+                  checked={checkedAnswers[questionNumber]?.[key] || ""}
+                  onChange={(e) => handleChange(key, e.target.checked)}
+                />
+                <CorrectLabelStyled
+                  htmlFor={key}
+                  correct={correct}
+                  showCorrect={showCorrect}
+                >
+                  {text}
+                </CorrectLabelStyled>
+              </li>
+            ))}
+          </ul>
           <OptionsStyled>
             <ToggleSwitch
               checked={showCorrect}
@@ -241,8 +276,8 @@ function Test() {
               label="Randomize answers [r]"
             />
           </OptionsStyled>
-        )}
-      </QuestionStyled>
+        </QuestionStyled>
+      )}
       <FooterStyled>
         <Button onClick={() => prev()} disabled={questionNumber <= 0}>
           &larr;
@@ -250,9 +285,20 @@ function Test() {
         {questionNumber < questionsLength - 1 && (
           <Button onClick={() => next()}>&rarr;</Button>
         )}
-        {questionNumber === questionsLength - 1 && (
+        {!finishReached && questionNumber === questionsLength - 1 && (
           <Button primary onClick={() => next()}>
             finish
+          </Button>
+        )}
+        {!isFinishScreen && finishReached && (
+          <Button
+            primary
+            onClick={() => {
+              dispatch({ type: "setQuestion", payload: questionsLength });
+              setShowCorrect(false);
+            }}
+          >
+            Summary &gt;&gt;
           </Button>
         )}
       </FooterStyled>
