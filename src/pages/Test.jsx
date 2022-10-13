@@ -1,6 +1,6 @@
 import { child, get, getDatabase, ref } from "firebase/database";
 import _shuffle from "lodash.shuffle";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../components/common/Button";
@@ -78,16 +78,64 @@ const CorrectLabelStyled = styled.label`
 
 const OptionsStyled = styled.aside``;
 
+function reducer(state, action) {
+  const getAnswers = (questionNumber, randomized) => {
+    if (randomized) return state.randomizedAnswers[questionNumber];
+
+    return Object.entries(state.questions[questionNumber]?.answers || {});
+  };
+
+  if (action.type === "nextQuestion") {
+    const questionNumber = state.questionNumber + 1;
+    if (questionNumber >= state.questions.length) return state;
+    return {
+      ...state,
+      questionNumber,
+      currentQuestion: state.questions[questionNumber]?.question,
+      currentAnswers: getAnswers(questionNumber, state.randomized),
+    };
+  } else if (action.type === "prevQuestion") {
+    const questionNumber = state.questionNumber - 1;
+    if (questionNumber < 0) return state;
+    return {
+      ...state,
+      questionNumber: questionNumber,
+      currentQuestion: state.questions[questionNumber]?.question,
+      currentAnswers: getAnswers(questionNumber, state.randomized),
+    };
+  } else if (action.type === "randomize") {
+    const randomized = !state.randomized;
+    return {
+      ...state,
+      randomized,
+      currentAnswers: getAnswers(state.questionNumber, randomized),
+    };
+  }
+
+  throw new Error("Unknown dispatch action");
+}
+
 function Test() {
-  const [questionNumber, setQuestionNumber] = useState(0);
   const [checkedAnswers, setCheckedAnswers] = useState({});
   const [results, setResults] = useState([]);
   const [showCorrect, setShowCorrect] = useState(false);
-  const [randomizeAnswers, setRandomizeAnswers] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState("");
-  const [currentAnswers, setCurrentAnswers] = useState([]);
 
-  const questions = useLoaderData();
+  const [state, dispatch] = useReducer(
+    reducer,
+    useLoaderData(),
+    (loaderData) => ({
+      questions: loaderData,
+      randomizedAnswers: loaderData.map((d) =>
+        _shuffle(Object.entries(d?.answers || {}))
+      ),
+      currentQuestion: loaderData[0]?.question,
+      currentAnswers: Object.entries(loaderData[0]?.answers || {}),
+      questionNumber: 0,
+      randomized: false,
+    })
+  );
+
+  // console.log(state);
 
   const handleChange = (key, checked) => {
     setCheckedAnswers((answs) => ({
@@ -100,22 +148,12 @@ function Test() {
   };
 
   const prev = () => {
-    setQuestionNumber((q) => (q === 0 ? 0 : q - 1));
+    dispatch({ type: "prevQuestion" });
   };
 
   const next = () => {
-    setQuestionNumber((q) => (q === questions.length ? q : q + 1));
+    dispatch({ type: "nextQuestion" });
   };
-
-  useEffect(() => {
-    setCurrentQuestion(questions[questionNumber]?.question);
-    setCurrentAnswers(Object.entries(questions[questionNumber]?.answers || {}));
-    setResults([]);
-    setShowCorrect(false);
-    if (questionNumber === questions.length) {
-      finish();
-    }
-  }, [questionNumber]);
 
   const finish = () => {
     const res = questions.map((q, ind) => {
@@ -134,20 +172,20 @@ function Test() {
   useKeyDown("ArrowLeft", prev);
   useKeyDown("ArrowRight", next);
   useKeyDown("s", () => setShowCorrect((showCorrect) => !showCorrect));
-  useKeyDown("r", () =>
-    setRandomizeAnswers((randomizeAnswers) => !randomizeAnswers)
-  );
+  useKeyDown("r", () => dispatch({ type: "randomize" }));
 
-  const isFinishScreen = questionNumber >= questions.length;
+  const { questionNumber, currentQuestion, currentAnswers, randomized } = state;
+  const questionsLength = state.questions.length;
+
+  const isFinishScreen = questionNumber >= questionsLength;
 
   useEffect(() => {
-    if (randomizeAnswers)
-      setCurrentAnswers((currentAnswers) => _shuffle(currentAnswers));
-    else
-      setCurrentAnswers(
-        Object.entries(questions[questionNumber]?.answers || {})
-      );
-  }, [randomizeAnswers, questionNumber]);
+    setResults([]);
+    // setShowCorrect(false);
+    if (isFinishScreen) {
+      finish();
+    }
+  }, [state.questionNumber]);
 
   return (
     <TestStyled>
@@ -155,7 +193,7 @@ function Test() {
         <h1>
           {isFinishScreen
             ? "The End"
-            : `Question: ${questionNumber + 1} / ${questions.length}`}
+            : `Question: ${questionNumber + 1} / ${questionsLength}`}
         </h1>
       </HeaderStyled>
       {isFinishScreen && (
@@ -198,10 +236,8 @@ function Test() {
               label="Show correct answers [s]"
             />
             <ToggleSwitch
-              checked={randomizeAnswers}
-              onChange={() =>
-                setRandomizeAnswers((randomizeAnswers) => !randomizeAnswers)
-              }
+              checked={randomized}
+              onChange={() => dispatch({ type: "randomize" })}
               label="Randomize answers [r]"
             />
           </OptionsStyled>
@@ -211,10 +247,10 @@ function Test() {
         <Button onClick={() => prev()} disabled={questionNumber <= 0}>
           &larr;
         </Button>
-        {questionNumber < questions.length - 1 && (
+        {questionNumber < questionsLength - 1 && (
           <Button onClick={() => next()}>&rarr;</Button>
         )}
-        {questionNumber === questions.length - 1 && (
+        {questionNumber === questionsLength - 1 && (
           <Button primary onClick={() => next()}>
             finish
           </Button>
