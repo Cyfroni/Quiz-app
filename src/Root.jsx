@@ -2,14 +2,22 @@ import React from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAuthContext } from "./Auth";
+import Logo from "../public/quizly-logo-big.svg";
 
 const MainNavStyled = styled.nav`
   display: flex;
   align-items: center;
   width: 100%;
+  height: 8rem;
   background-color: ${({ theme }) => theme.colors.main};
   font-size: 2rem;
-  padding: 0 5rem;
+  padding-right: 5rem;
+
+  img {
+    height: 100%;
+    padding: 0.5rem;
+    margin: 0 1rem;
+  }
 
   p {
     margin-right: 5rem;
@@ -20,9 +28,12 @@ const MainNavStyled = styled.nav`
     display: flex;
     list-style-type: none;
     color: white;
+    height: 100%;
 
     li {
-      padding: 1rem 2rem;
+      /* padding: 1rem 2rem; */
+      /* padding: 0 2rem; */
+      height: 100%;
       transition: all 0.3s;
       &:last-child {
         margin-left: auto;
@@ -34,12 +45,15 @@ const MainNavStyled = styled.nav`
 
     a,
     button {
-      padding: 2rem 0;
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       text-decoration: none;
       cursor: pointer;
 
-      text-align: center;
+      height: 100%;
+      padding: 0 2rem;
+
       color: inherit;
     }
 
@@ -48,7 +62,6 @@ const MainNavStyled = styled.nav`
       border: none;
       background: none;
       width: 100%;
-      height: 100%;
     }
   }
 `;
@@ -65,6 +78,7 @@ export default function Root() {
   return (
     <>
       <MainNavStyled>
+        <img src={Logo} alt="Quizly logo" />
         <p>{user?.email || "ANONYMOUS"}</p>
         <ul>
           <li>
