@@ -36,7 +36,7 @@ const TestStyled = styled.section`
 const FooterStyled = styled.footer`
   margin-top: auto;
   position: sticky;
-  bottom: 3rem;
+  bottom: 2rem;
   button {
     padding: 2rem 4rem;
     margin: 0.5rem;
@@ -46,7 +46,6 @@ const FooterStyled = styled.footer`
 const QuestionStyled = styled.article`
   padding: 0 10rem;
   margin: 2rem auto;
-  text-align: center;
 
   ul {
     padding: 5rem;
@@ -57,6 +56,10 @@ const QuestionStyled = styled.article`
 
   input {
     margin-right: 0.5rem;
+  }
+
+  @media screen and (max-width: 800px) {
+    padding: 0 1rem;
   }
 `;
 

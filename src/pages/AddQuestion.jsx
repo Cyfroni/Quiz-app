@@ -27,11 +27,18 @@ const AddQuestionStyled = styled.section`
   flex-direction: column;
   gap: 2rem;
 
-  margin: 0 auto;
+  margin: 0 30rem;
   padding: 10rem 0;
-  max-width: 60rem;
 
   font-size: 2rem;
+
+  @media screen and (max-width: 1100px) {
+    margin: 0 20rem;
+  }
+
+  @media screen and (max-width: 900px) {
+    margin: 0 1rem;
+  }
 `;
 
 const AddQuestionButton = styled(Button)`

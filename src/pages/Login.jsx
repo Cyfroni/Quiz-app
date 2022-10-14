@@ -20,15 +20,21 @@ const LoginStyled = styled.section`
   flex-direction: column;
   gap: 3rem;
 
-  margin: 0 auto;
-  margin-top: 10rem;
-  max-width: 60rem;
+  margin: 10rem 30rem;
 
   font-size: 3rem;
 
   button {
     margin: 0 auto;
-    margin-top: 8rem;
+    margin-top: 6rem;
+  }
+
+  @media screen and (max-width: 1100px) {
+    margin: 10rem 20rem;
+  }
+
+  @media screen and (max-width: 900px) {
+    margin: 10rem 1rem;
   }
 `;
 

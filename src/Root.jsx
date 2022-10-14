@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAuthContext } from "./Auth";
@@ -11,7 +11,6 @@ const MainNavStyled = styled.nav`
   height: 8rem;
   background-color: ${({ theme }) => theme.colors.main};
   font-size: 2rem;
-  padding-right: 5rem;
 
   img {
     height: 100%;
@@ -31,8 +30,6 @@ const MainNavStyled = styled.nav`
     height: 100%;
 
     li {
-      /* padding: 1rem 2rem; */
-      /* padding: 0 2rem; */
       height: 100%;
       transition: all 0.3s;
       &:last-child {
@@ -62,11 +59,85 @@ const MainNavStyled = styled.nav`
       border: none;
       background: none;
       width: 100%;
+      margin-right: 5rem;
+    }
+  }
+
+  > button {
+    display: none;
+    height: 5rem;
+    width: 4rem;
+    margin: 0 8rem;
+
+    border: none;
+    background-color: transparent;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-left: auto;
+    transform: translateY(${({ showMenu }) => (showMenu ? "0" : "1rem")});
+
+    border-top: 1px solid white;
+    border-color: ${({ showMenu }) => (showMenu ? "transparent" : "white")};
+
+    transition: all 0.4s;
+
+    line-height: 1;
+
+    &::before,
+    &::after {
+      content: "";
+      display: block;
+      width: 100%;
+      border-top: 1px solid white;
+
+      transition: all 0.4s;
+    }
+
+    &::before {
+      transform: translateY(${({ showMenu }) => (showMenu ? "0.8rem" : "0")})
+        rotate(${({ showMenu }) => (showMenu ? "45deg" : "0")});
+      transform-origin: 50% 0 0;
+    }
+    &::after {
+      transform: translateY(${({ showMenu }) => (showMenu ? "-0.8rem" : "0")})
+        rotate(${({ showMenu }) => (showMenu ? "-45deg" : "0")});
+
+      transform-origin: 50% 0 0;
+    }
+  }
+
+  @media screen and (max-width: 800px) {
+    z-index: 10;
+    > button {
+      display: flex;
+    }
+
+    ul {
+      display: ${({ showMenu }) => (showMenu ? "block" : "none")};
+
+      position: absolute;
+      right: 0;
+      bottom: -8rem;
+      flex: none;
+      width: 20rem;
+
+      flex-direction: column;
+
+      li {
+        height: 5rem;
+      }
+
+      background-color: ${({ theme }) => theme.colors.main};
     }
   }
 `;
 
 export default function Root() {
+  const [showMenu, setShowMenu] = useState(false);
   const { user, isAdmin, logout } = useAuthContext();
   const navigate = useNavigate();
 
@@ -77,9 +148,12 @@ export default function Root() {
 
   return (
     <>
-      <MainNavStyled>
+      <MainNavStyled showMenu={showMenu}>
         <img src={Logo} alt="Quizly logo" />
         <p>{user?.email || "ANONYMOUS"}</p>
+        <button value={showMenu} onClick={() => setShowMenu((b) => !b)}>
+          &nbsp;
+        </button>
         <ul>
           <li>
             <Link to="/">Home</Link>

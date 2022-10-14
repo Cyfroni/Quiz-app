@@ -130,7 +130,16 @@ const GlobalStyle = createGlobalStyle`
 
   html {
     font-size: 62.5%;
+
+    @media screen and (max-width: 800px) {
+      font-size: 55%;
+    }
+
+    @media screen and (max-width: 600px) {
+      font-size: 50%;
+    }
   }
+
 
   body {
     min-height: 100vh;
