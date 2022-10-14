@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAuthContext } from "./Auth";
-import Logo from "../public/quizly-logo-big.svg";
+import Logo from "/quizly-logo-big.svg";
 
 const MainNavStyled = styled.nav`
   display: flex;
@@ -117,7 +117,7 @@ const MainNavStyled = styled.nav`
     }
 
     ul {
-      display: ${({ showMenu }) => (showMenu ? "block" : "none")};
+      display: block;
 
       position: absolute;
       right: 0;
@@ -127,11 +127,16 @@ const MainNavStyled = styled.nav`
 
       flex-direction: column;
 
+      background-color: ${({ theme }) => theme.colors.main};
+
+      transition: all 0.4s;
+      translate: ${({ showMenu }) => (showMenu ? "0" : "100%")};
+
       li {
         height: 5rem;
+        transition: all 0.2s 0.2s;
+        translate: ${({ showMenu }) => (showMenu ? "0" : "50rem")};
       }
-
-      background-color: ${({ theme }) => theme.colors.main};
     }
   }
 `;
