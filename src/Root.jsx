@@ -65,7 +65,8 @@ const MainNavStyled = styled.nav`
 
   > button {
     display: none;
-    height: 5rem;
+    /* height: 4rem; */
+    height: 30px;
     width: 4rem;
     margin: 0 8rem;
 
@@ -76,6 +77,7 @@ const MainNavStyled = styled.nav`
 
     align-items: center;
     justify-content: center;
+    /* justify-content: space-between; */
 
     margin-left: auto;
     transform: translateY(${({ showMenu }) => (showMenu ? "0" : "1rem")});
@@ -85,7 +87,7 @@ const MainNavStyled = styled.nav`
 
     transition: all 0.4s;
 
-    line-height: 1;
+    line-height: 10px;
 
     &::before,
     &::after {
@@ -98,14 +100,13 @@ const MainNavStyled = styled.nav`
     }
 
     &::before {
-      transform: translateY(${({ showMenu }) => (showMenu ? "0.8rem" : "0")})
+      transform: translateY(${({ showMenu }) => (showMenu ? "5.5px" : "0")})
         rotate(${({ showMenu }) => (showMenu ? "45deg" : "0")});
       transform-origin: 50% 0 0;
     }
     &::after {
-      transform: translateY(${({ showMenu }) => (showMenu ? "-0.8rem" : "0")})
+      transform: translateY(${({ showMenu }) => (showMenu ? "-5.5px" : "0")})
         rotate(${({ showMenu }) => (showMenu ? "-45deg" : "0")});
-
       transform-origin: 50% 0 0;
     }
   }
@@ -114,9 +115,22 @@ const MainNavStyled = styled.nav`
     z-index: 10;
     > button {
       display: flex;
+      margin-right: 2rem;
     }
 
+    border-bottom: 1px solid ${({ theme }) => theme.colors.main_darker};
+
+    overflow-x: hidden;
+
     ul {
+      /* display: none; */
+
+      /* display: ${({ showMenu }) => (showMenu ? "block" : "none")}; */
+
+      /* opacity: 0; */
+
+      /* border-top: 1px solid ${({ theme }) => theme.colors.main_darker}; */
+
       display: block;
 
       position: absolute;
@@ -130,15 +144,26 @@ const MainNavStyled = styled.nav`
       background-color: ${({ theme }) => theme.colors.main};
 
       transition: all 0.4s;
-      translate: ${({ showMenu }) => (showMenu ? "0" : "100%")};
+      /* translate: ${({ showMenu }) => (showMenu ? "0" : "100%")}; */
+
+      /* transform: translateX(${({ showMenu }) =>
+        showMenu ? "0" : "100%"}); */
+
+      opacity: ${({ showMenu }) => (showMenu ? "1" : "0")};
+      /* visibility: ${({ showMenu }) => (showMenu ? "hidden" : "unset")}; */
 
       li {
         height: 5rem;
         transition: all 0.2s 0.2s;
-        translate: ${({ showMenu }) => (showMenu ? "0" : "50rem")};
+        /* translate: ${({ showMenu }) => (showMenu ? "0" : "50rem")}; */
       }
     }
   }
+`;
+
+const Main = styled.main`
+  transition: all 0.4s;
+  filter: blur(${({ showMenu }) => (showMenu ? "3px" : "0")});
 `;
 
 export default function Root() {
@@ -186,9 +211,9 @@ export default function Root() {
           )}
         </ul>
       </MainNavStyled>
-      <main>
+      <Main showMenu={showMenu}>
         <Outlet />
-      </main>
+      </Main>
     </>
   );
 }

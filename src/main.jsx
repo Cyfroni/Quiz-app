@@ -143,7 +143,7 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     min-height: 100vh;
-    background-color: ${({ theme }) => theme.colors.bg_color}
+    background-color: ${({ theme }) => theme.colors.bg_color};
   }
 
   /* @media (prefers-color-scheme: light) {
