@@ -65,8 +65,7 @@ const MainNavStyled = styled.nav`
 
   > button {
     display: none;
-    /* height: 4rem; */
-    height: 30px;
+    height: 33px;
     width: 4rem;
     margin: 0 8rem;
 
@@ -125,13 +124,13 @@ const MainNavStyled = styled.nav`
     ul {
       /* display: none; */
 
-      /* display: ${({ showMenu }) => (showMenu ? "block" : "none")}; */
+      display: ${({ showMenu }) => (showMenu ? "block" : "none")};
 
       /* opacity: 0; */
 
       /* border-top: 1px solid ${({ theme }) => theme.colors.main_darker}; */
 
-      display: block;
+      /* display: block; */
 
       position: absolute;
       right: 0;

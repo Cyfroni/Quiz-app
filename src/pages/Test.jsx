@@ -1,6 +1,7 @@
 import { child, get, getDatabase, ref } from "firebase/database";
 import _shuffle from "lodash.shuffle";
 import { useEffect, useReducer, useState } from "react";
+import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../components/common/Button";
@@ -22,30 +23,44 @@ export async function loader() {
 }
 
 const TestStyled = styled.section`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-
   font-size: 2rem;
-
-  footer {
-    align-self: center;
-  }
 `;
 
 const FooterStyled = styled.footer`
-  margin-top: auto;
-  position: sticky;
-  bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  position: ${({ visible }) => (visible ? "absolute" : "sticky")};
+  bottom: 0;
   button {
     padding: 2rem 4rem;
     margin: 0.5rem;
   }
+
+  @media screen and (max-width: 800px) {
+    width: 100%;
+    > * {
+      flex: 1;
+    }
+  }
 `;
 
+function Footer(props) {
+  const { ref, inView, entry } = useInView({
+    rootMargin: "-50px",
+  });
+  // console.log(ref);
+  // console.log(inView);
+  return (
+    <>
+      <FooterStyled {...props} visible={inView} />
+      <div ref={ref} />
+    </>
+  );
+}
+
 const QuestionStyled = styled.article`
-  padding: 0 10rem;
-  margin: 2rem auto;
+  padding: 2rem 10rem;
+  margin: 0 auto;
 
   ul {
     padding: 5rem;
@@ -59,7 +74,7 @@ const QuestionStyled = styled.article`
   }
 
   @media screen and (max-width: 800px) {
-    padding: 0 1rem;
+    padding: 2rem 1rem;
   }
 `;
 
@@ -79,7 +94,11 @@ const CorrectLabelStyled = styled.label`
     showCorrect ? (correct ? "green" : "red") : "inherit"};
 `;
 
-const OptionsStyled = styled.aside``;
+const OptionsStyled = styled.aside`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
 
 const ResultsStyled = styled.ul`
   margin: 2rem;
@@ -281,7 +300,7 @@ function Test() {
           </OptionsStyled>
         </QuestionStyled>
       )}
-      <FooterStyled>
+      <Footer>
         <Button onClick={() => prev()} disabled={questionNumber <= 0}>
           &larr;
         </Button>
@@ -304,7 +323,7 @@ function Test() {
             Summary &gt;&gt;
           </Button>
         )}
-      </FooterStyled>
+      </Footer>
     </TestStyled>
   );
 }
