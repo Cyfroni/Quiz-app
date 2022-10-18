@@ -24,6 +24,7 @@ export async function loader() {
 
 const TestStyled = styled.section`
   font-size: 2rem;
+  margin-bottom: 6rem;
 `;
 
 const FooterStyled = styled.footer`
@@ -50,8 +51,6 @@ function Footer(props) {
   const { ref, inView, entry } = useInView({
     rootMargin: "-50px",
   });
-  // console.log(ref);
-  // console.log(inView);
   return (
     <>
       <FooterStyled {...props} visible={inView} />
