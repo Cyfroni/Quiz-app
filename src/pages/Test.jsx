@@ -27,8 +27,10 @@ const TestStyled = styled.section`
 `;
 
 const FooterStyled = styled.footer`
+  width: 100vw;
   display: flex;
   justify-content: center;
+  /* position: ${({ visible }) => (visible ? "absolute" : "sticky")}; */
   position: ${({ visible }) => (visible ? "absolute" : "sticky")};
   bottom: 0;
   button {
@@ -36,8 +38,17 @@ const FooterStyled = styled.footer`
     margin: 0.5rem;
   }
 
+  gap: 2rem;
+
+  /* > * {
+    min-width: 30rem;
+  } */
+
+  /* > * {
+    flex-basis: 10rem;
+  } */
+
   @media screen and (max-width: 800px) {
-    width: 100%;
     > * {
       flex: 1;
     }
