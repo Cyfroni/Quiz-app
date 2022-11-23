@@ -12,6 +12,9 @@ const MainNavStyled = styled.nav`
   background-color: ${({ theme }) => theme.colors.main};
   font-size: 2rem;
 
+  /* position: relative; */
+  overflow: hidden;
+
   img {
     height: 100%;
     padding: 0.5rem;
@@ -23,6 +26,8 @@ const MainNavStyled = styled.nav`
   }
 
   ul {
+    z-index: 10;
+    /* overflow: hidden; */
     flex: 1;
     display: flex;
     list-style-type: none;
@@ -30,6 +35,7 @@ const MainNavStyled = styled.nav`
     height: 100%;
 
     li {
+      /* overflow: hidden; */
       height: 100%;
       transition: all 0.3s;
       &:last-child {
@@ -95,7 +101,7 @@ const MainNavStyled = styled.nav`
       width: 100%;
       border-top: 1px solid white;
 
-      transition: all 0.4s;
+      transition: all 0.4s ease-out;
     }
 
     &::before {
@@ -111,7 +117,7 @@ const MainNavStyled = styled.nav`
   }
 
   @media screen and (max-width: 800px) {
-    z-index: 10;
+    /* z-index: 10; */
     > button {
       display: flex;
       margin-right: 2rem;
@@ -124,13 +130,13 @@ const MainNavStyled = styled.nav`
     ul {
       /* display: none; */
 
-      display: ${({ showMenu }) => (showMenu ? "block" : "none")};
+      /* display: ${({ showMenu }) => (showMenu ? "block" : "none")}; */
 
       /* opacity: 0; */
 
       /* border-top: 1px solid ${({ theme }) => theme.colors.main_darker}; */
 
-      /* display: block; */
+      display: block;
 
       position: absolute;
       right: 0;
@@ -142,8 +148,8 @@ const MainNavStyled = styled.nav`
 
       background-color: ${({ theme }) => theme.colors.main};
 
-      transition: all 0.4s;
-      /* translate: ${({ showMenu }) => (showMenu ? "0" : "100%")}; */
+      transition: all 0.4s ease-out;
+      translate: ${({ showMenu }) => (showMenu ? "0" : "100%")};
 
       /* transform: translateX(${({ showMenu }) =>
         showMenu ? "0" : "100%"}); */
@@ -153,8 +159,8 @@ const MainNavStyled = styled.nav`
 
       li {
         height: 5rem;
-        transition: all 0.2s 0.2s;
-        /* translate: ${({ showMenu }) => (showMenu ? "0" : "50rem")}; */
+        transition: all 0.2s 0.2s ease-out;
+        translate: ${({ showMenu }) => (showMenu ? "0" : "50rem")};
       }
     }
   }

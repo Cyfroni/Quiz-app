@@ -110,6 +110,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   #root {
+    /* position: relative; */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -143,6 +144,9 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     min-height: 100vh;
+    /* position: relative;
+    width: 100vw; */
+    /* overflow: hidden; */
     background-color: ${({ theme }) => theme.colors.bg_color};
   }
 
