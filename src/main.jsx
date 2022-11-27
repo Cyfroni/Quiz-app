@@ -5,6 +5,7 @@ import {
   Navigate,
   Outlet,
   RouterProvider,
+  useRouteError,
 } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 // import { AuthContextProvider, useAuthContext } from "./Auth";
@@ -81,6 +82,7 @@ const router = createBrowserRouter([
             path: "test",
             element: <Test />,
             loader: testLoader,
+            errorElement: <ErrorBoundary />,
           },
         ],
       },
@@ -98,6 +100,13 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
+function ErrorBoundary() {
+  const error = useRouteError();
+  console.error(error);
+  // return <div>Something went wrong</div>;
+  return <div>{error.message}</div>;
+}
 
 const GlobalStyle = createGlobalStyle`
 
