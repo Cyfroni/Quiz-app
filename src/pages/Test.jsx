@@ -1,4 +1,4 @@
-import { child, get, getDatabase, ref } from "firebase/database";
+// import { child, get, getDatabase, ref } from "firebase/database";
 import _shuffle from "lodash.shuffle";
 import { useEffect, useReducer, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -11,15 +11,41 @@ import useKeyDown from "../utils/useKeyDown";
 // import mockdb from "./_mockdb.json";
 
 export async function loader() {
-  const dbRef = ref(getDatabase());
-  const snapshot = await get(child(dbRef, `questions`));
-  return Object.values(snapshot.val());
+  // const dbRef = ref(getDatabase());
+  // const snapshot = await get(child(dbRef, `questions`));
+  // return Object.values(snapshot.val());
 
-  // return Object.values(mockdb.questions);
+  const response = await fetch(import.meta.env.VITE_GRAPHQL_URL + "graphql", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: `
+            query{
+                questions(categoryId: 3){
+                    id
+                  content
+                  answers
+                  correctAnswer
+                }
+              }
+            `,
+    }),
+  });
 
-  // const db = getDatabase();
-  // const data = query(ref(db, "questions"), limitToLast(100));
-  // return data.
+  const data = await response.json();
+
+  return data.data.questions.map((q) => ({
+    answers: q.answers.reduce((map, obj, ind) => {
+      map["Answer " + ind] = {
+        correct: !(ind % 3),
+        text: obj,
+      };
+      return map;
+    }, {}),
+    question: q.content,
+  }));
 }
 
 const TestStyled = styled.section`

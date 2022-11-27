@@ -193,11 +193,11 @@ export default function Root() {
           <li>
             <Link to="/">Home</Link>
           </li>
-          {user && (
-            <li>
-              <Link to="/user/test">Test</Link>
-            </li>
-          )}
+          {/* {user && ( */}
+          <li>
+            <Link to="/user/test">Test</Link>
+          </li>
+          {/* )} */}
           {user && isAdmin && (
             <li>
               <Link to="/admin/addQuestion">Add Question</Link>

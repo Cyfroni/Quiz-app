@@ -7,8 +7,9 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
-import { AuthContextProvider, useAuthContext } from "./Auth";
-import AddQuestion from "./pages/AddQuestion";
+// import { AuthContextProvider, useAuthContext } from "./Auth";
+import { useAuthContext } from "./Auth";
+// import AddQuestion from "./pages/AddQuestion";
 import Login from "./pages/Login";
 import Test, { loader as testLoader } from "./pages/Test";
 import Root from "./Root";
@@ -73,7 +74,8 @@ const router = createBrowserRouter([
 
       {
         path: "user",
-        element: <ProtectedRoute />,
+        // element: <ProtectedRoute />,
+        element: <Outlet />,
         children: [
           {
             path: "test",
@@ -83,16 +85,16 @@ const router = createBrowserRouter([
         ],
       },
 
-      {
-        path: "admin",
-        element: <AdminRoute />,
-        children: [
-          {
-            path: "addQuestion",
-            element: <AddQuestion />,
-          },
-        ],
-      },
+      // {
+      //   path: "admin",
+      //   element: <AdminRoute />,
+      //   children: [
+      //     {
+      //       path: "addQuestion",
+      //       element: <AddQuestion />,
+      //     },
+      //   ],
+      // },
     ],
   },
 ]);
@@ -161,10 +163,10 @@ const GlobalStyle = createGlobalStyle`
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ThemeProvider>
-      <AuthContextProvider>
-        <GlobalStyle />
-        <RouterProvider router={router} />
-      </AuthContextProvider>
+      {/* <AuthContextProvider> */}
+      <GlobalStyle />
+      <RouterProvider router={router} />
+      {/* </AuthContextProvider> */}
     </ThemeProvider>
   </React.StrictMode>
 );
